@@ -27,6 +27,46 @@ if [ ! -f "$CERT" ] || [ ! -f "$KEY" ]; then
   chmod 600 "$KEY"
 fi
 
+# --- the two optional outside services ---------------------------------------
+# Excalidraw has two features that reach somebody else's server: the shape
+# library, a public catalogue at libraries.excalidraw.com, and the text-to-
+# diagram feature, which sends what you typed to oss-ai.excalidraw.com. Both are
+# genuinely useful and neither is telemetry, so this image keeps them in the
+# build and switches them HERE rather than deciding for everyone.
+#
+# Off by default, because that is what the image promises on the tin. Turn one
+# on and the browser talks to Excalidraw for that feature, and only that one.
+#
+# Rewritten at start rather than at build time so the same image serves both
+# answers: pointing them at a path on this server means the request fails
+# locally instead of leaving the machine, and the feature reports an error
+# rather than silently doing nothing.
+patch_switch() {
+  name="$1"; want="$2"; host="$3"; replacement="$4"
+  case "$want" in
+    true|TRUE|yes|1|on)
+      log "${name}: on, this browser will contact ${host}"
+      return 0
+      ;;
+  esac
+  if grep -rl "$host" /usr/share/nginx/html >/dev/null 2>&1; then
+    grep -rl "$host" /usr/share/nginx/html 2>/dev/null | while read -r f; do
+      sed -i "s#https://${host}#${replacement}#g" "$f"
+    done
+    log "${name}: off, requests stay on this server"
+  else
+    # The build gate checks the same strings, so reaching here means the image
+    # was assembled differently than it was tested. Say so instead of implying
+    # the switch worked.
+    log "${name}: WARNING, ${host} not found in the build, switch had nothing to do"
+  fi
+}
+
+patch_switch "shape library" "${ENABLE_LIBRARY:-false}" \
+  "libraries.excalidraw.com" "/disabled/library"
+patch_switch "text to diagram" "${ENABLE_AI:-false}" \
+  "oss-ai.excalidraw.com" "/disabled/ai"
+
 # --- store -------------------------------------------------------------------
 # Ours: one static binary, SQLite in /config. Scenes, rooms and files.
 log "store on ${STORE_ADDR}, database ${STORE_DB}"

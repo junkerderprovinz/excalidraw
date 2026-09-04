@@ -58,7 +58,11 @@ COPY frontend/ExportToExcalidrawPlus.tsx excalidraw-app/components/ExportToExcal
 RUN yarn install --frozen-lockfile --network-timeout 600000
 ENV VITE_APP_BACKEND_V2_GET_URL=/api/v2/scenes/ \
     VITE_APP_BACKEND_V2_POST_URL=/api/v2/scenes \
-    VITE_APP_WS_SERVER_URL= \
+    # "/" and not an empty string: socket.io resolves a leading slash against
+    # the page's own origin, while an empty value reaches new URL("") and throws
+    # "Invalid base URL" into the console on every load. The connection survived
+    # that, which is exactly why it would have shipped unnoticed.
+    VITE_APP_WS_SERVER_URL=/ \
     VITE_APP_ENABLE_TRACKING=false \
     VITE_APP_FIREBASE_CONFIG={} \
     NODE_OPTIONS=--max-old-space-size=4096
@@ -84,10 +88,10 @@ FROM excalidraw/excalidraw-room:latest AS room
 # At build time, so the running container never reaches for the network, and so
 # a build that cannot make the image self-contained fails instead of shipping.
 FROM alpine:3.22 AS patch
-RUN apk add --no-cache curl
+RUN apk add --no-cache python3
 COPY --from=web /src/excalidraw-app/build /html
-COPY rootfs/usr/local/bin/patch-spa.sh /patch-spa.sh
-RUN sh /patch-spa.sh /html
+COPY rootfs/usr/local/bin/patch-spa.py /patch-spa.py
+RUN python3 /patch-spa.py /html
 
 # --- runtime -----------------------------------------------------------------
 FROM node:24-alpine
