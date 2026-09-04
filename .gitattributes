@@ -1,0 +1,7 @@
+# Die Skripte laufen in einem Linux-Container. Mit CRLF findet der Kernel den
+# Interpreter nicht und der Start scheitert mit "no such file or directory",
+# was auf einem Windows-Arbeitsplatz sonst erst im gebauten Abbild auffaellt.
+* text=auto eol=lf
+*.sh text eol=lf
+Dockerfile text eol=lf
+*.conf text eol=lf
