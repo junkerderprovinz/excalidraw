@@ -1,0 +1,4 @@
+# nichts Gebautes im Repo
+/backend/excalidraw-store
+*.sqlite
+*.sqlite-*
