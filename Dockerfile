@@ -40,7 +40,12 @@
 ARG EXCALIDRAW_SHA=214cd6e6e8ac3ad6b68486aa7aa7241abdf9445f
 
 # --- the SPA, built here -----------------------------------------------------
-FROM node:24-alpine AS web
+# Pinned to the BUILD platform, deliberately. The output is JavaScript, which is
+# identical whatever it will run on, so building it once natively instead of once
+# per target architecture is not a shortcut, it is the same bytes without an
+# emulated second pass. Compiling Excalidraw under QEMU for arm64 takes the build
+# from minutes into the better part of an hour.
+FROM --platform=$BUILDPLATFORM node:24-alpine AS web
 ARG EXCALIDRAW_SHA
 RUN apk add --no-cache git python3 make g++
 WORKDIR /src
@@ -72,12 +77,16 @@ RUN yarn build:app:docker
 # The usual self-hosted store is a Node service whose published image has not
 # moved since February 2022. This one is a single static binary over SQLite with
 # the same routes. See backend/main.go for what it keeps and why.
-FROM golang:1.25-alpine AS store
+# Also built natively and cross-compiled, for the same reason: Go does that in
+# one step, and emulating a compiler to produce the same binary is pure waiting.
+FROM --platform=$BUILDPLATFORM golang:1.25-alpine AS store
+ARG TARGETOS
+ARG TARGETARCH
 WORKDIR /src
 COPY backend/go.mod backend/go.sum ./
 RUN go mod download
 COPY backend/ ./
-RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/excalidraw-store .
+RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH}     go build -trimpath -ldflags="-s -w" -o /out/excalidraw-store .
 
 # --- the room server ---------------------------------------------------------
 # Upstream's own relay. It forwards messages between connected browsers and
@@ -91,7 +100,7 @@ FROM excalidraw/excalidraw-room@sha256:2fe999f9be4379e3ee282fc45d75d84a691a6383d
 # --- last outbound references ------------------------------------------------
 # At build time, so the running container never reaches for the network, and so
 # a build that cannot make the image self-contained fails instead of shipping.
-FROM alpine:3.22 AS patch
+FROM --platform=$BUILDPLATFORM alpine:3.22 AS patch
 RUN apk add --no-cache python3
 COPY --from=web /src/excalidraw-app/build /html
 COPY rootfs/usr/local/bin/patch-spa.py /patch-spa.py

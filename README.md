@@ -45,15 +45,16 @@ Maintained solo, in whatever spare time there is. Questions via the support thre
 ## Table of Contents
 
 1. [What is this?](#1-what-is-this)
-2. [What it keeps off the internet](#2-what-it-keeps-off-the-internet)
-3. [How it is built](#3-how-it-is-built)
-4. [Quick Start on Unraid](#4-quick-start-on-unraid)
-5. [Configuration](#5-configuration)
-6. [Reverse Proxy](#6-reverse-proxy)
-7. [Building it yourself](#7-building-it-yourself)
-8. [Updating Excalidraw](#8-updating-excalidraw)
-9. [License](#9-license)
-10. [Support this project](#10-support-this-project)
+2. [Screenshots](#2-screenshots)
+3. [What it keeps off the internet](#3-what-it-keeps-off-the-internet)
+4. [How it is built](#4-how-it-is-built)
+5. [Quick Start on Unraid](#5-quick-start-on-unraid)
+6. [Configuration](#6-configuration)
+7. [Reverse Proxy](#7-reverse-proxy)
+8. [Building it yourself](#8-building-it-yourself)
+9. [Updating Excalidraw](#9-updating-excalidraw)
+10. [License](#10-license)
+11. [Support this project](#11-support-this-project)
 
 <br>
 
@@ -73,7 +74,21 @@ gate in the build refuses to produce an image where any of it still points outwa
 
 <br>
 
-## 2. What it keeps off the internet
+## 2. Screenshots
+
+<p align="center">
+  <img src=".github/assets/screenshots/canvas.png" width="90%" alt="A diagram on the canvas">
+  <br><em>The whiteboard itself, unchanged: this is Excalidraw, drawing the way it always does.</em>
+</p>
+
+<p align="center">
+  <img src=".github/assets/screenshots/collaboration.png" width="90%" alt="The share dialog">
+  <br><em>Both of these now run on your server. The session is end-to-end encrypted, and the key never leaves the link.</em>
+</p>
+
+<br>
+
+## 3. What it keeps off the internet
 
 | What | Upstream | Here |
 | --- | --- | --- |
@@ -96,7 +111,7 @@ bytes it cannot read.
 
 <br>
 
-## 3. How it is built
+## 4. How it is built
 
 Three processes behind one nginx:
 
@@ -114,7 +129,7 @@ LAN IP, behind a reverse proxy and under a subdomain with nothing to configure.
 
 <br>
 
-## 4. Quick Start on Unraid
+## 5. Quick Start on Unraid
 
 Search for **excalidraw** in Community Applications, or add the container by hand:
 
@@ -138,7 +153,7 @@ ever started.
 
 <br>
 
-## 5. Configuration
+## 6. Configuration
 
 | Variable | Default | What it does |
 | --- | --- | --- |
@@ -151,7 +166,7 @@ ever started.
 
 <br>
 
-## 6. Reverse Proxy
+## 7. Reverse Proxy
 
 Point your proxy at port **80** of the container and let it terminate TLS. The app only ever uses
 relative paths, so nothing needs to know its own address. Two things the proxy has to allow:
@@ -161,7 +176,7 @@ relative paths, so nothing needs to know its own address. Two things the proxy h
 
 <br>
 
-## 7. Building it yourself
+## 8. Building it yourself
 
 ```bash
 git clone https://github.com/junkerderprovinz/excalidraw.git
@@ -181,7 +196,7 @@ cd backend && go test ./...
 
 <br>
 
-## 8. Updating Excalidraw
+## 9. Updating Excalidraw
 
 The upstream commit is pinned in the `Dockerfile` as `EXCALIDRAW_SHA`, deliberately, so the image
 does not change under you. To move it forward, set the new commit and rebuild. If the replaced file
@@ -191,7 +206,7 @@ runtime expects them.
 
 <br>
 
-## 9. License
+## 10. License
 
 This repository is licensed under **AGPL-3.0** (see [LICENSE](LICENSE)).
 
@@ -201,7 +216,7 @@ and say so in their headers. This project is not affiliated with or endorsed by 
 
 <br>
 
-## 10. Support this project
+## 11. Support this project
 
 <p align="center">
   <a href="https://buymeacoffee.com/junkerderprovinz">
