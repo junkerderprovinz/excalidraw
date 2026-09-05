@@ -1,0 +1,74 @@
+name: Lint & Test
+
+# What this repo actually consists of, and therefore what is worth checking:
+# a Go store with its own tests, a Dockerfile, two shell/Python scripts that run
+# at build and start, and two TypeScript files that replace upstream ones. The
+# TypeScript is deliberately NOT type-checked here: it only makes sense against
+# Excalidraw's own tree, where the image build already compiles it, and a check
+# that cannot see those types would either pass on nothing or fail on everything.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+      - "LICENSE"
+      - ".github/assets/**"
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  go:
+    name: Go store
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: "1.25"
+          cache-dependency-path: backend/go.sum
+
+      - name: Formatting
+        run: |
+          unformatted=$(gofmt -l .)
+          if [ -n "$unformatted" ]; then
+            echo "gofmt would change these files:"
+            echo "$unformatted"
+            exit 1
+          fi
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Test
+        run: go test ./...
+
+  scripts:
+    name: Dockerfile and scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Dockerfile
+        uses: hadolint/hadolint-action@v3.3.0
+        with:
+          dockerfile: Dockerfile
+          # DL3008: apk without a pinned version. The base image is pinned and
+          # rebuilt regularly; pinning every apk package on top means a broken
+          # build every time Alpine moves, for no security gain here.
+          ignore: DL3008,DL3018
+
+      - name: Shell
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+          shellcheck rootfs/usr/local/bin/start.sh
+
+      - name: Python
+        run: python3 -m py_compile rootfs/usr/local/bin/patch-spa.py
