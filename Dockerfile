@@ -100,7 +100,7 @@ FROM excalidraw/excalidraw-room@sha256:2fe999f9be4379e3ee282fc45d75d84a691a6383d
 # --- last outbound references ------------------------------------------------
 # At build time, so the running container never reaches for the network, and so
 # a build that cannot make the image self-contained fails instead of shipping.
-FROM --platform=$BUILDPLATFORM alpine:3.22 AS patch
+FROM --platform=$BUILDPLATFORM alpine:3.24 AS patch
 RUN apk add --no-cache python3
 COPY --from=web /src/excalidraw-app/build /html
 COPY rootfs/usr/local/bin/patch-spa.py /patch-spa.py
