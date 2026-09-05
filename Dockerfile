@@ -82,7 +82,11 @@ RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/excalidraw-store .
 # --- the room server ---------------------------------------------------------
 # Upstream's own relay. It forwards messages between connected browsers and
 # stores nothing, which is exactly why the store above exists.
-FROM excalidraw/excalidraw-room:latest AS room
+#
+# Pinned by digest, like the app's commit above: this image has no version tags
+# at all, only :latest, so without a digest the whiteboard's collaboration half
+# would change under a rebuild with nothing to point at afterwards.
+FROM excalidraw/excalidraw-room@sha256:2fe999f9be4379e3ee282fc45d75d84a691a6383dde33544514cc395287c7a70 AS room
 
 # --- last outbound references ------------------------------------------------
 # At build time, so the running container never reaches for the network, and so

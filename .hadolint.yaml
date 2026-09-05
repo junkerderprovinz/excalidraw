@@ -1,0 +1,7 @@
+# Shared by the local pre-push hook and the CI lint job, so both say the same
+# thing about the same file.
+ignored:
+  # Pinning every apk package on top of an already-pinned base image means a
+  # broken build every time Alpine moves a patch version, and buys nothing:
+  # the base is rebuilt regularly and the packages come from its own release.
+  - DL3018
