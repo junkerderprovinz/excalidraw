@@ -171,12 +171,18 @@ jobs:
           PW: ${{ secrets.DOCKERHUB_PASSWORD }}
         run: |
           if [ -n "$PW" ]; then echo "go=true" >> "$GITHUB_OUTPUT"; else echo "DOCKERHUB_PASSWORD not set — skipping Docker Hub description sync"; echo "go=false" >> "$GITHUB_OUTPUT"; fi
+      # Never fatal. The image is already pushed by the time this runs, and a
+      # description that did not update is a cosmetic problem on a listing page,
+      # not a reason to mark a good build red. The first run on this repo failed
+      # with 401 while the push itself succeeded, which is exactly the shape this
+      # guards against: the two use different credentials.
       - name: Sync README to Docker Hub
         if: ${{ steps.dhdesc.outputs.go == 'true' }}
+        continue-on-error: true
         uses: peter-evans/dockerhub-description@v5
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           repository: ${{ vars.DOCKERHUB_USERNAME }}/excalidraw
-          short-description: "A clean, login-free, self-hosted file sharer. Drop a file, set an expiry, share a link."
+          short-description: "Self-hosted Excalidraw that keeps to itself: links, collaboration and fonts all stay on your server."
           enable-url-completion: true

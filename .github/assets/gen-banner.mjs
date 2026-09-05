@@ -38,7 +38,7 @@ const opentype = require(`${gRoot}/opentype.js`);
 const __dir = dirname(fileURLToPath(import.meta.url));
 
 // ---- content + styling -----------------------------------------------------
-const NAME = "excalidraw"; // lowercase, the way the project writes itself
+const NAME = "EXCALIDRAW"; // house standard: the name is set in caps
 const CLAIM = "Hand-drawn diagrams that never phone home.";
 const THEMES = [
   { suffix: "", bg: "#ffffff", name: "#1f2328", claim: "#5a5d5e" },
@@ -147,7 +147,21 @@ function fitSize(font, text, start) {
   throw new Error(`no NaN-free size for "${text}" near ${start}pt`);
 }
 
-const nameSize = fitSize(nameFont, NAME, TARGET_CAP / capRatio(nameFont));
+// Cap height first, then width. The house target is a uniform cap height, but a
+// long name in caps at that height simply does not fit next to a 400px logo:
+// "EXCALIDRAW" wanted 1221px and ran 256px off the canvas. The standard's own
+// answer is to shrink such a name until it leaves a right margin, so the fit
+// wins over the target rather than the text running off the edge unnoticed.
+const RIGHT_MARGIN = 80;
+let nameSize = fitSize(nameFont, NAME, TARGET_CAP / capRatio(nameFont));
+{
+  // textX is not known yet, so use the widest the logo can push it to.
+  const roomForText = W - (startX + INK + gap) - RIGHT_MARGIN;
+  const natural = shapeRun(nameFont, NAME, nameSize).width;
+  if (natural > roomForText) {
+    nameSize = fitSize(nameFont, NAME, nameSize * (roomForText / natural));
+  }
+}
 const nameW = shapeRun(nameFont, NAME, nameSize).width;
 const claimW = shapeRun(claimFont, CLAIM, claimSize).width;
 
