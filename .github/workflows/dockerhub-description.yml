@@ -26,7 +26,7 @@ jobs:
         uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: ${{ vars.DOCKERHUB_USERNAME }}/excalidraw
           short-description: "Self-hosted Excalidraw that keeps to itself: links, collaboration and fonts all stay on your server."
           enable-url-completion: true
