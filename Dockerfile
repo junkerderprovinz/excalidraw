@@ -116,6 +116,11 @@ COPY --from=patch /html /usr/share/nginx/html
 COPY --from=store /out/excalidraw-store /usr/local/bin/excalidraw-store
 COPY --from=room /excalidraw-room /opt/room
 COPY rootfs/ /
+# Belt and braces on the execute bit. It is set in git, but a checkout on a
+# filesystem that does not carry it (Windows, a zip download) would otherwise
+# produce an image that dies at startup with "exec ... permission denied" and
+# never serves a single request. Cheap here, invisible everywhere else.
+RUN chmod +x /usr/local/bin/start.sh
 
 ENV STORE_ADDR=127.0.0.1:8081 \
     STORE_DB=/config/store.sqlite \
