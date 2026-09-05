@@ -1,0 +1,32 @@
+# Push the README to the Docker Hub repo's Overview, on demand and nothing else.
+#
+# build.yml already does this after every image push, but two things make it
+# useless for diagnosing a failure: it only runs after a full multi-arch build,
+# and its sync step is continue-on-error, so a refused login still shows a green
+# check while the description stays empty.
+#
+# This one builds nothing, pushes no image, and has no error suppression. If the
+# credential is refused, the run goes red and says so.
+name: Docker Hub description
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    name: Sync README to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Sync README to Docker Hub
+        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          repository: ${{ vars.DOCKERHUB_USERNAME }}/excalidraw
+          short-description: "Self-hosted Excalidraw that keeps to itself: links, collaboration and fonts all stay on your server."
+          enable-url-completion: true
