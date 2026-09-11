@@ -29,15 +29,17 @@ browser never contacts anyone else. One container, one port, nothing to configur
 <br>
 
 <p align="center">
-Maintained solo, in whatever spare time there is. Questions via the support thread, bugs, ideas and feature requests via <a href="https://github.com/junkerderprovinz/excalidraw/issues">GitHub issues</a>. If it's useful to you, a coffee is always welcome.
+Maintained solo, in whatever spare time there is. Questions via the support thread, bugs, ideas and feature requests via <a href="https://github.com/junkerderprovinz/excalidraw/issues">GitHub issues</a>. If it has helped you, a little support genuinely helps. Three ways below.
 </p>
 
 <br>
 
 <p align="center">
-  <a href="https://buymeacoffee.com/junkerderprovinz">
-    <img src=".github/assets/button-buy-me-a-coffee.svg" alt="Buy me a coffee" width="220">
-  </a>
+  <a href="https://buymeacoffee.com/junkerderprovinz"><img src="https://raw.githubusercontent.com/junkerderprovinz/junkerderprovinz/main/donate/buttons/button-buy-me-a-coffee-live.svg" alt="Buy me a coffee" width="160"></a>
+  &nbsp;
+  <a href="https://paypal.me/hallelujadesign"><img src="https://raw.githubusercontent.com/junkerderprovinz/junkerderprovinz/main/donate/buttons/button-paypal-live.svg" alt="PayPal" width="160"></a>
+  &nbsp;
+  <a href="https://junkerderprovinz.github.io/junkerderprovinz/"><img src="https://raw.githubusercontent.com/junkerderprovinz/junkerderprovinz/main/donate/buttons/button-crypto-live.svg" alt="Donate with crypto" width="160"></a>
 </p>
 
 <br>
@@ -219,7 +221,9 @@ and say so in their headers. This project is not affiliated with or endorsed by 
 ## 11. Support this project
 
 <p align="center">
-  <a href="https://buymeacoffee.com/junkerderprovinz">
-    <img src=".github/assets/button-buy-me-a-coffee.svg" alt="Buy me a coffee" width="220">
-  </a>
+  <a href="https://buymeacoffee.com/junkerderprovinz"><img src="https://raw.githubusercontent.com/junkerderprovinz/junkerderprovinz/main/donate/buttons/button-buy-me-a-coffee-live.svg" alt="Buy me a coffee" width="160"></a>
+  &nbsp;
+  <a href="https://paypal.me/hallelujadesign"><img src="https://raw.githubusercontent.com/junkerderprovinz/junkerderprovinz/main/donate/buttons/button-paypal-live.svg" alt="PayPal" width="160"></a>
+  &nbsp;
+  <a href="https://junkerderprovinz.github.io/junkerderprovinz/"><img src="https://raw.githubusercontent.com/junkerderprovinz/junkerderprovinz/main/donate/buttons/button-crypto-live.svg" alt="Donate with crypto" width="160"></a>
 </p>
