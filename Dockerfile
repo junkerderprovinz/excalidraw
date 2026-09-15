@@ -131,6 +131,8 @@ EXPOSE 80 443
 VOLUME ["/config"]
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s \
-  CMD wget -q -O /dev/null http://127.0.0.1/ || exit 1
+  # The shell is named rather than implied: the probe needs one for the "||",
+  # and the exec form says so instead of leaving it to the image default.
+  CMD ["sh", "-c", "wget -q -O /dev/null http://127.0.0.1/ || exit 1"]
 
 ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/start.sh"]
