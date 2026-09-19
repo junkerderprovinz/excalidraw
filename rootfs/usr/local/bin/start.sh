@@ -2,20 +2,18 @@
 # Start the three processes this image is made of: the storage backend, the room
 # server, and nginx in front of both.
 #
-# No process supervisor: tini is PID 1 and reaps, and if either node service dies
-# the container should die with it rather than serve a whiteboard whose sharing
-# silently stopped working. A half-working container is worse than a restarted
-# one, because nobody notices the half.
+# No process supervisor: tini is PID 1 and reaps, and if a service dies the
+# container dies with it rather than serve a whiteboard whose sharing silently
+# stopped working.
 set -eu
 
 log() { printf '%s  %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$1"; }
 
 mkdir -p /config
 
-# --- certificate -------------------------------------------------------------
-# Live collaboration needs a secure context (crypto.subtle), so HTTPS is not a
-# nicety here. A self-signed certificate is generated once and kept in /config,
-# so it survives a container rebuild and a browser only has to be told once.
+# Live collaboration needs a secure context (crypto.subtle), so HTTPS is
+# required. A self-signed certificate is generated once and kept in /config, so
+# it survives a container rebuild and a browser only has to be told once.
 CERT=/config/cert.pem
 KEY=/config/key.pem
 if [ ! -f "$CERT" ] || [ ! -f "$KEY" ]; then
@@ -27,20 +25,14 @@ if [ ! -f "$CERT" ] || [ ! -f "$KEY" ]; then
   chmod 600 "$KEY"
 fi
 
-# --- the two optional outside services ---------------------------------------
-# Excalidraw has two features that reach somebody else's server: the shape
-# library, a public catalogue at libraries.excalidraw.com, and the text-to-
-# diagram feature, which sends what you typed to oss-ai.excalidraw.com. Both are
-# genuinely useful and neither is telemetry, so this image keeps them in the
-# build and switches them HERE rather than deciding for everyone.
+# Two Excalidraw features reach somebody else's server: the shape library, a
+# public catalogue at libraries.excalidraw.com, and text to diagram, which sends
+# what you typed to oss-ai.excalidraw.com. Neither is telemetry, so both stay in
+# the build and are switched here, off by default.
 #
-# Off by default, because that is what the image promises on the tin. Turn one
-# on and the browser talks to Excalidraw for that feature, and only that one.
-#
-# Rewritten at start rather than at build time so the same image serves both
-# answers: pointing them at a path on this server means the request fails
-# locally instead of leaving the machine, and the feature reports an error
-# rather than silently doing nothing.
+# Switching at start lets one image serve both answers. A disabled feature
+# points at a path on this server, so its requests fail locally and it reports
+# an error rather than silently doing nothing.
 patch_switch() {
   name="$1"; want="$2"; host="$3"; replacement="$4"
   case "$want" in
@@ -67,20 +59,18 @@ patch_switch "shape library" "${ENABLE_LIBRARY:-false}" \
 patch_switch "text to diagram" "${ENABLE_AI:-false}" \
   "oss-ai.excalidraw.com" "/disabled/ai"
 
-# --- store -------------------------------------------------------------------
-# Ours: one static binary, SQLite in /config. Scenes, rooms and files.
+# The store: one static binary with SQLite in /config.
 log "store on ${STORE_ADDR}, database ${STORE_DB}"
 excalidraw-store &
 STORAGE_PID=$!
 
-# --- room server -------------------------------------------------------------
 export PORT="$ROOM_PORT"
 log "room server on :${ROOM_PORT}"
 node /opt/room/dist/index.js &
 ROOM_PID=$!
 
-# --- nginx -------------------------------------------------------------------
-# Waits for both, so the first request cannot land on a socket nobody listens to.
+# Wait for the room server before nginx starts, so the first request cannot land
+# on a socket nobody listens to.
 for _ in 1 2 3 4 5 6 7 8 9 10; do
   if wget -q -O /dev/null "http://127.0.0.1:${ROOM_PORT}/" 2>/dev/null; then break; fi
   sleep 1
@@ -102,9 +92,7 @@ NGINX_PID=$!
 
 # Any of the three going down takes the container down, so a half-working
 # whiteboard (drawing fine, sharing quietly broken) turns into a restart instead
-# of a mystery. Written as a poll rather than `wait -n`, which busybox ash does
-# not have: the first version used it and the container died on line 32 with
-# "parameter not set", never reaching a single request.
+# of a mystery. A poll, because busybox ash has no `wait -n`.
 while kill -0 "$STORAGE_PID" 2>/dev/null \
    && kill -0 "$ROOM_PID" 2>/dev/null \
    && kill -0 "$NGINX_PID" 2>/dev/null; do

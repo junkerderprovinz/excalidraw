@@ -1,11 +1,9 @@
 name: Lint & Test
 
-# What this repo actually consists of, and therefore what is worth checking:
-# a Go store with its own tests, a Dockerfile, two shell/Python scripts that run
-# at build and start, and two TypeScript files that replace upstream ones. The
-# TypeScript is deliberately NOT type-checked here: it only makes sense against
-# Excalidraw's own tree, where the image build already compiles it, and a check
-# that cannot see those types would either pass on nothing or fail on everything.
+# Checks what this repo consists of: a Go store with its own tests, a Dockerfile,
+# the shell and Python scripts that run at build and start, and two TypeScript
+# files that replace upstream ones. The TypeScript is not type-checked here: it
+# only compiles against Excalidraw's own tree, which the image build already does.
 
 on:
   push:
@@ -60,9 +58,9 @@ jobs:
         uses: hadolint/hadolint-action@v3.3.0
         with:
           dockerfile: Dockerfile
-          # DL3008: apk without a pinned version. The base image is pinned and
-          # rebuilt regularly; pinning every apk package on top means a broken
-          # build every time Alpine moves, for no security gain here.
+          # DL3008 and DL3018: apt and apk packages without a pinned version. The
+          # base image is pinned and rebuilt regularly; pinning every package on
+          # top means a broken build every time Alpine moves, for no security gain.
           ignore: DL3008,DL3018
 
       - name: Shell

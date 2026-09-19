@@ -1,38 +1,30 @@
 // Replaces excalidraw-app/data/firebase.ts.
 //
-// Derived from Excalidraw (MIT), whose file this replaces. The upstream project
-// is at https://github.com/excalidraw/excalidraw; only the destination of the
-// bytes differs here, and the header above says exactly how.
+// Derived from Excalidraw (MIT), whose file this replaces:
+// https://github.com/excalidraw/excalidraw
 //
-// Upstream keeps three things in Google Firestore and Firebase Storage: the
+// Upstream keeps two things in Google Firestore and Firebase Storage: the
 // encrypted scene of a live session, so a latecomer sees the current state and
 // the session survives everyone closing their tab, and the images pasted into a
-// drawing. The room server only relays messages between connected browsers and
-// stores nothing, which is why that store exists at all.
-//
-// This file keeps the same exports and the same encryption, and puts the bytes
-// in the container's own store:
+// drawing. This file keeps the same exports and the same encryption, and puts
+// the bytes in the container's own store:
 //
 //   PUT/GET  /api/v2/rooms/<roomId>
 //   PUT/GET  /api/v2/files/<fileId>
 //
-// Relative paths on purpose: the browser resolves them against whatever address
-// the page was opened on, so one image works on a LAN address, behind a reverse
-// proxy and under a subdomain without anything to configure.
+// The paths are relative, so the browser resolves them against whatever address
+// the page was opened on and one image works anywhere without configuration.
 //
-// Deliberately unchanged from upstream: every encrypt and decrypt call, the
-// reconcile step, the scene-version cache keyed by socket, the double cast
-// through OrderedExcalidrawElement, and the re-read after writing (the in-memory
-// reconciled elements can have moved on by then). The store only ever sees
-// ciphertext — the key lives in the URL fragment, which browsers do not send.
+// Unchanged from upstream: every encrypt and decrypt call, the reconcile step,
+// the scene-version cache keyed by socket, the double cast through
+// OrderedExcalidrawElement, and the re-read after writing. The store only sees
+// ciphertext; the key lives in the URL fragment, which browsers do not send.
 //
-// ONE difference in substance, and it is worth knowing: upstream wraps
-// read-reconcile-write in a Firestore transaction. This store has no
-// transactions, so two clients saving in the same instant can have one write
-// land on a slightly older read. The reconcile is a merge rather than an
-// overwrite and every client keeps saving as it draws, so the next save folds
-// the two together; what a collision costs is one round of latency, not
-// somebody's rectangle.
+// One difference: upstream wraps read, reconcile and write in a Firestore
+// transaction, and this store has no transactions. Two clients saving in the
+// same instant can have one write land on a slightly older read, but the
+// reconcile is a merge and every client keeps saving as it draws, so the next
+// save folds the two together.
 
 import { reconcileElements } from "@excalidraw/excalidraw";
 import { MIME_TYPES, toBrandedType } from "@excalidraw/common";
@@ -181,9 +173,8 @@ const decryptScene = async (
   return JSON.parse(new TextDecoder("utf-8").decode(new Uint8Array(decrypted)));
 };
 
-// No explicit return type on purpose: getSyncableElements returns a mutable
-// array, and declaring it readonly here is what made the cast below and
-// toBrandedType fail. Let the inferred type carry the truth.
+// No explicit return type: getSyncableElements returns a mutable array, and
+// declaring it readonly breaks the cast in saveToFirebase and toBrandedType.
 const loadRoom = async (roomId: string, roomKey: string) => {
   const blob = await getBytes(`${ROOMS}${roomId}`);
   if (!blob || blob.byteLength <= VERSION_BYTES + IV_BYTES) {
@@ -220,14 +211,10 @@ export const saveToFirebase = async (
   const scene = await encryptScene(roomKey, reconciledElements);
   await put(`${ROOMS}${roomId}`, scene.buffer as ArrayBuffer);
 
-  // Read back what was actually stored rather than trusting the local copy: the
-  // in-memory reconciled elements can have mutated while the write was in
-  // flight, which is the same reason upstream returns the stored document.
-  //
-  // No fallback to the local copy if that read comes up empty. A room that is
-  // not there one moment after it was written means the store lost the write,
-  // and quietly carrying on with the local elements would hide that until
-  // somebody notices their session never persisted.
+  // Read back what was stored rather than trusting the local copy, which can
+  // have changed while the write was in flight; upstream returns the stored
+  // document for the same reason. A room missing right after the write means
+  // the store lost it, and falling back to the local elements would hide that.
   const storedElements = await loadRoom(roomId, roomKey);
   if (!storedElements) {
     throw new StoreError(`room ${roomId} was not there right after writing it`);

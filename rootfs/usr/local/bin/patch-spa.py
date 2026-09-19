@@ -12,13 +12,8 @@ the time this runs. Two things are not variables:
              in the build. The missing ones are fetched here, once.
   analytics  a script the page builds and appends at runtime.
 
-This replaced a shell version that used `sed`, and the reason is worth keeping:
-line-based edits are the wrong tool for minified HTML. Deleting the one line
-that mentioned the analytics host left `scriptEle.setAttribute("src",);` behind,
-a syntax error the browser reported on every load, and replacing the CDN prefix
-with nothing turned `EXCALIDRAW_ASSET_PATH` into `["", "/"]`, where the empty
-entry reached `new URL("")` and threw. Both were visible only in the console,
-both would have shipped.
+Python rather than sed, because line-based edits are the wrong tool for minified
+HTML: they leave fragments behind that fail only in the browser console.
 """
 
 import os
@@ -28,10 +23,10 @@ import urllib.request
 
 CDN = "https://excalidraw.nyc3.cdn.digitaloceanspaces.com/oss/"
 
-# Anything still pointing at somebody else's server when this is done. Not on
-# this list: the shape library and the AI endpoint. Those two are real features
-# rather than telemetry, so they stay in the build and are switched at START
-# time instead (see start.sh) — off by default, on for whoever wants them.
+# Anything still pointing at somebody else's server when this is done. The shape
+# library and the AI endpoint are real features rather than telemetry, so they
+# stay in the build and are switched at start time instead (see start.sh), off
+# by default.
 FORBIDDEN = (
     "digitaloceanspaces",
     "simpleanalytics",
@@ -41,10 +36,9 @@ FORBIDDEN = (
     "firebaseio.com",
 )
 
-# The two switchable ones. They MUST still be in the build: start.sh turns them
-# off by rewriting exactly these strings, and a rename upstream would leave the
-# switch pointing at nothing while the container still called home. Better to
-# fail the build than to ship a switch that does not switch.
+# The two switchable ones have to stay in the build: start.sh turns them off by
+# rewriting exactly these strings, and after a rename upstream the switch would
+# point at nothing while the container still called home.
 SWITCHABLE = (
     "libraries.excalidraw.com",
     "oss-ai.excalidraw.com",
@@ -71,10 +65,9 @@ def main():
     if not os.path.isfile(index):
         fail(f"no index.html under {root}")
 
-    # --- fonts ---------------------------------------------------------------
-    # Fetch whatever the build does not already carry, then make every reference
-    # site-relative. "/" and not "": the asset path is a list the app feeds to
-    # new URL(), and an empty entry there is an exception on every load.
+    # Fonts: fetch whatever the build does not already carry, then make every
+    # reference site-relative. "/" and not "": the asset path is a list the app
+    # feeds to new URL(), and an empty entry there throws on every load.
     fetched = 0
     for path in text_files(root):
         with open(path, encoding="utf-8", errors="surrogateescape") as fh:
@@ -93,11 +86,9 @@ def main():
         with open(path, "w", encoding="utf-8", errors="surrogateescape") as fh:
             fh.write(body.replace(CDN, "/"))
 
-    # --- analytics -----------------------------------------------------------
-    # Remove the whole script element, not the line that names the host. The
-    # script is built and appended at runtime, so half of it is worse than all
-    # of it: the browser reports the leftover call and the page carries a
-    # permanent error for no reason.
+    # Analytics: remove the whole script element, not the line that names the
+    # host. The script is built at runtime, and a leftover half of it is a syntax
+    # error on every load.
     with open(index, encoding="utf-8", errors="surrogateescape") as fh:
         html = fh.read()
     before = html
@@ -112,9 +103,8 @@ def main():
     with open(index, "w", encoding="utf-8", errors="surrogateescape") as fh:
         fh.write(html)
 
-    # --- proof, not hope -----------------------------------------------------
-    # The gate for this image's whole promise. If any of these survives, the
-    # build stops instead of shipping something whose description is untrue.
+    # If any outbound reference survives, the build stops instead of shipping an
+    # image whose description is untrue.
     offenders = []
     for path in text_files(root):
         with open(path, encoding="utf-8", errors="surrogateescape") as fh:
@@ -128,7 +118,7 @@ def main():
             print("  " + line, file=sys.stderr)
         raise SystemExit(1)
 
-    # And the other direction: the switchable addresses have to BE there.
+    # And the other direction: the switchable addresses have to be there.
     everything = ""
     for path in text_files(root):
         with open(path, encoding="utf-8", errors="surrogateescape") as fh:

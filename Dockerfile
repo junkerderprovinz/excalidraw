@@ -1,14 +1,13 @@
 # syntax=docker/dockerfile:1
-# =============================================================================
-# excalidraw — a whiteboard that keeps to itself
+# excalidraw: a whiteboard that keeps to itself
 #
 # The published Excalidraw image is nginx over a built SPA, and that SPA talks
 # to Excalidraw's own cloud: the shared-link store, the collaboration socket,
 # the session scene in Google Firestore, a font CDN and an analytics script.
-# None of it is configurable at runtime, because Vite bakes the addresses into
-# the bundle when it is built.
+# Vite bakes those addresses into the bundle at build time, so none of them can
+# be changed at runtime.
 #
-# So this image builds the SPA itself and points every one of those back at the
+# This image builds the SPA itself and points every one of them back at the
 # container:
 #
 #   shared links     -> /api/v2/scenes   (the store below)
@@ -19,32 +18,26 @@
 #   fonts            -> served from this image
 #   analytics        -> removed
 #
-# The API addresses are RELATIVE paths, not an absolute URL assembled from some
-# PUBLIC_URL variable. The browser resolves a relative path against whatever
-# address the page was opened on, so one image works on a LAN address, behind a
-# reverse proxy, under a subdomain, over either protocol, with nothing to
-# configure. nginx routes those paths to the two services inside the container.
+# The API addresses are relative paths rather than an absolute URL built from a
+# PUBLIC_URL variable. The browser resolves them against whatever address the
+# page was opened on, so one image works on a LAN address, behind a reverse
+# proxy, under a subdomain and over either protocol with nothing to configure.
+# nginx routes those paths to the two services inside the container.
 #
-# Why HTTPS is not optional here: live collaboration calls crypto.subtle, which
-# a browser only exposes in a secure context. Over plain HTTP on a LAN address
-# window.isSecureContext is false, crypto.subtle is undefined, and starting a
+# HTTPS is not optional: live collaboration calls crypto.subtle, which a browser
+# only exposes in a secure context. Over plain HTTP on a LAN address, starting a
 # session dies with "Cannot read properties of undefined (reading 'generateKey')".
-# Measured against the published image on 2026-09-05. This image therefore
-# serves HTTPS with a certificate it generates on first start, and keeps the
-# plain HTTP port for the single-user case where no session is ever started.
-# =============================================================================
+# So the image serves HTTPS with a certificate it generates on first start, and
+# keeps the plain HTTP port for the single-user case where no session is started.
 
 # The upstream commit this image is built from. Pinned, never "main": a
 # whiteboard that rebuilds into something different every night cannot be
 # supported, and the frontend patch has to be re-checked whenever it moves.
 ARG EXCALIDRAW_SHA=214cd6e6e8ac3ad6b68486aa7aa7241abdf9445f
 
-# --- the SPA, built here -----------------------------------------------------
-# Pinned to the BUILD platform, deliberately. The output is JavaScript, which is
-# identical whatever it will run on, so building it once natively instead of once
-# per target architecture is not a shortcut, it is the same bytes without an
-# emulated second pass. Compiling Excalidraw under QEMU for arm64 takes the build
-# from minutes into the better part of an hour.
+# The SPA, built once on the build platform: the output is JavaScript and the
+# same for every target, while compiling Excalidraw under QEMU for arm64 takes the
+# build from minutes into the better part of an hour.
 FROM --platform=$BUILDPLATFORM node:24-alpine AS web
 ARG EXCALIDRAW_SHA
 RUN apk add --no-cache git python3 make g++
@@ -53,8 +46,8 @@ RUN git init -q . \
  && git remote add origin https://github.com/excalidraw/excalidraw.git \
  && git fetch -q --depth 1 origin "${EXCALIDRAW_SHA}" \
  && git checkout -q FETCH_HEAD
-# The one file that talked to Firestore. Same six exports, same encryption,
-# different destination — see its own header for what stays untouched and why.
+# The one file that talked to Firestore: same six exports, same encryption,
+# different destination. Its header says what stays untouched and why.
 COPY frontend/firebase.ts excalidraw-app/data/firebase.ts
 # The "Export to Excalidraw+" card uploads to the commercial hosted product,
 # which is the one thing this image exists to avoid. Replaced, not deleted:
@@ -65,20 +58,17 @@ ENV VITE_APP_BACKEND_V2_GET_URL=/api/v2/scenes/ \
     VITE_APP_BACKEND_V2_POST_URL=/api/v2/scenes \
     # "/" and not an empty string: socket.io resolves a leading slash against
     # the page's own origin, while an empty value reaches new URL("") and throws
-    # "Invalid base URL" into the console on every load. The connection survived
-    # that, which is exactly why it would have shipped unnoticed.
+    # "Invalid base URL" into the console on every load.
     VITE_APP_WS_SERVER_URL=/ \
     VITE_APP_ENABLE_TRACKING=false \
     VITE_APP_FIREBASE_CONFIG={} \
     NODE_OPTIONS=--max-old-space-size=4096
 RUN yarn build:app:docker
 
-# --- the store, ours ---------------------------------------------------------
-# The usual self-hosted store is a Node service whose published image has not
-# moved since February 2022. This one is a single static binary over SQLite with
-# the same routes. See backend/main.go for what it keeps and why.
-# Also built natively and cross-compiled, for the same reason: Go does that in
-# one step, and emulating a compiler to produce the same binary is pure waiting.
+# The store. The usual self-hosted one is a Node service whose published image
+# has not moved since February 2022; this is a single static binary over SQLite
+# with the same routes (see backend/main.go). Cross-compiled on the build
+# platform, since Go does that in one step.
 FROM --platform=$BUILDPLATFORM golang:1.25-alpine AS store
 ARG TARGETOS
 ARG TARGETARCH
@@ -88,25 +78,20 @@ RUN go mod download
 COPY backend/ ./
 RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH}     go build -trimpath -ldflags="-s -w" -o /out/excalidraw-store .
 
-# --- the room server ---------------------------------------------------------
-# Upstream's own relay. It forwards messages between connected browsers and
-# stores nothing, which is exactly why the store above exists.
-#
-# Pinned by digest, like the app's commit above: this image has no version tags
-# at all, only :latest, so without a digest the whiteboard's collaboration half
-# would change under a rebuild with nothing to point at afterwards.
+# The room server, upstream's own relay. It forwards messages between connected
+# browsers and stores nothing. Pinned by digest because the image has no version
+# tags, only :latest, and collaboration would otherwise change under a rebuild.
 FROM excalidraw/excalidraw-room@sha256:2fe999f9be4379e3ee282fc45d75d84a691a6383dde33544514cc395287c7a70 AS room
 
-# --- last outbound references ------------------------------------------------
-# At build time, so the running container never reaches for the network, and so
-# a build that cannot make the image self-contained fails instead of shipping.
+# Removes the last outbound references at build time, so the running container
+# never reaches for the network and a build that cannot make the image
+# self-contained fails instead of shipping.
 FROM --platform=$BUILDPLATFORM alpine:3.24 AS patch
 RUN apk add --no-cache python3
 COPY --from=web /src/excalidraw-app/build /html
 COPY rootfs/usr/local/bin/patch-spa.py /patch-spa.py
 RUN python3 /patch-spa.py /html
 
-# --- runtime -----------------------------------------------------------------
 FROM node:24-alpine
 
 RUN apk add --no-cache nginx openssl tini \
@@ -116,10 +101,9 @@ COPY --from=patch /html /usr/share/nginx/html
 COPY --from=store /out/excalidraw-store /usr/local/bin/excalidraw-store
 COPY --from=room /excalidraw-room /opt/room
 COPY rootfs/ /
-# Belt and braces on the execute bit. It is set in git, but a checkout on a
-# filesystem that does not carry it (Windows, a zip download) would otherwise
-# produce an image that dies at startup with "exec ... permission denied" and
-# never serves a single request. Cheap here, invisible everywhere else.
+# The execute bit is set in git, but a checkout on a filesystem that does not
+# carry it (Windows, a zip download) would give an image that dies at startup
+# with "exec ... permission denied".
 RUN chmod +x /usr/local/bin/start.sh
 
 ENV STORE_ADDR=127.0.0.1:8081 \

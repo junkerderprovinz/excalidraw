@@ -3,6 +3,12 @@
 All notable changes to this image are documented here. The full text of each
 release is in `.github/release-notes/`.
 
+## Unreleased
+
+### ⚡ Improved
+
+- Tidied the code comments and log messages.
+
 ## 1.0.0 — 2026-09-05
 
 First release. Excalidraw, self-hosted, with nothing pointing outward: shared

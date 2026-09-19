@@ -1,23 +1,16 @@
 // Replaces excalidraw-app/components/ExportToExcalidrawPlus.tsx.
 //
-// Derived from Excalidraw (MIT), whose file this replaces. The upstream project
-// is at https://github.com/excalidraw/excalidraw; only the destination of the
-// bytes differs here, and the header above says exactly how.
+// Derived from Excalidraw (MIT), whose file this replaces:
+// https://github.com/excalidraw/excalidraw
 //
 // Upstream this is the "Export to Excalidraw+" card: it encrypts the drawing,
 // uploads it to Firebase Storage and hands back a link into the commercial
-// hosted product. That is a deliberate, useful feature there, and exactly the
-// opposite of what this image is for, so the upload is gone.
+// hosted product. This image keeps drawings on its own server, so the upload is
+// gone.
 //
-// Both exports stay, with their signatures, because App.tsx imports them and a
-// missing export is a broken build rather than a removed feature. The card
-// explains where the drawing would have gone instead of quietly doing nothing:
-// a control that looks live and isn't is worse than an honest sentence.
-//
-// Written with plain markup and no imports from the Excalidraw packages. The
-// first attempt reached for their Card and ToolButton components and guessed
-// the import paths wrong, which cost a full build; this file has nothing left
-// to guess about, and nothing that a moved component can break.
+// Both exports keep their signatures because App.tsx imports them. The card says
+// where drawings stay instead of silently doing nothing. It uses plain markup and
+// no imports from the Excalidraw packages, so a moved component cannot break it.
 //
 // Everything else about exporting is untouched: saving to a file, copying to
 // the clipboard, PNG and SVG export, and the shareable link, which stays in

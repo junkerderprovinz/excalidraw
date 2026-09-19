@@ -122,8 +122,7 @@ func TestRejectsEmptyAndOversized(t *testing.T) {
 }
 
 // Ids are the only thing standing in front of a shared drawing, so they must not
-// be guessable or sequential. Two in a row differing is a weak check; this one
-// looks for structure across many.
+// be guessable or sequential.
 func TestIDsAreRandomAndNumeric(t *testing.T) {
 	seen := map[string]bool{}
 	for i := 0; i < 200; i++ {

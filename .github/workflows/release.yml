@@ -18,8 +18,8 @@ permissions:
   contents: write
 
 env:
-  # Opt JS-based actions into Node 24 ahead of the 2026-06-16 forced switch,
-  # silencing the Node 20 deprecation warning on checkout/gh-release.
+  # Runs JS-based actions on Node 24, which silences the Node 20 deprecation
+  # warning on checkout and gh-release.
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:

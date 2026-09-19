@@ -4,8 +4,8 @@
  *   excalidraw-banner-dark.svg / .png dark  1600x500, GitHub-dark ground
  *
  * House standard: logo left, ink-left at x=165 and ink-centre at y=250, largest
- * ink dimension ~400px; the name to its right in the project's OWN font, sized
- * by CAP HEIGHT so every repo's name reads the same size; exactly one claim in
+ * ink dimension ~400px; the name to its right in the project's own font, sized
+ * by cap height so every repo's name reads the same size; exactly one claim in
  * Lato underneath, grey. Nothing else on the banner.
  *
  * The name is set in Excalifont, Excalidraw's own hand-drawn face, because the
@@ -37,7 +37,6 @@ const opentype = require(`${gRoot}/opentype.js`);
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 
-// ---- content + styling -----------------------------------------------------
 const NAME = "EXCALIDRAW"; // house standard: the name is set in caps
 const CLAIM = "Hand-drawn diagrams that never phone home.";
 const THEMES = [
@@ -54,7 +53,6 @@ const claimSize = 44, gap = 70, lineGap = 8, startX = 165;
 const CDN = "https://excalidraw.nyc3.cdn.digitaloceanspaces.com/oss/fonts";
 const EXCALIFONT = `${CDN}/Excalifont/Excalifont-Regular-a88b72a24fb54c9f94e3b5fdaa7481c9.woff2`;
 const LATO = "https://cdn.jsdelivr.net/gh/google/fonts@main/ofl/lato/Lato-Regular.ttf";
-// ---------------------------------------------------------------------------
 
 async function fetchTo(url, path) {
   if (existsSync(path)) return path;
@@ -71,7 +69,7 @@ async function loadTTF(url, cacheName) {
 }
 
 // opentype.js reads TTF, the web ships woff2. fontTools does the one step in
-// between; brotli is what actually decompresses the glyf table.
+// between; brotli is what decompresses the glyf table.
 async function loadWOFF2(url, cacheName) {
   const woff2 = await fetchTo(url, join(tmpdir(), `excalidraw-${cacheName}.woff2`));
   const ttf = join(tmpdir(), `excalidraw-${cacheName}.ttf`);
@@ -85,9 +83,9 @@ async function loadWOFF2(url, cacheName) {
   return opentype.parse(buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength));
 }
 
-// Glyph-by-glyph with manual kerning, and every path taken at the ORIGIN before
+// Glyph by glyph with manual kerning, and every path taken at the origin before
 // being translated into place: opentype.js emits NaN control points for some
-// glyph, size and POSITION combinations, and small coordinates never hit it.
+// combinations of glyph, size and position, and small coordinates never hit it.
 function shapeRun(font, text, size) {
   const scale = size / font.unitsPerEm;
   const run = [];
@@ -101,12 +99,10 @@ function shapeRun(font, text, size) {
   }
   return { run, width: x };
 }
-// One <path> per glyph, each one drawn at the ORIGIN and moved into place by its
-// own transform. Two separate traps meet here and this sidesteps both:
-// @resvg/resvg-js silently abandons a single path that merges many glyph
-// subpaths partway through, and opentype.js emits literal NaN coordinates for
-// some glyph-and-absolute-x combinations. The first attempt did neither and
-// rendered "exc" of "excalidraw" and "Hand-drawn diagr." of the claim.
+// One <path> per glyph, drawn at the origin and moved into place by its own
+// transform: @resvg/resvg-js silently abandons a single path that merges many
+// glyph subpaths, and opentype.js emits NaN coordinates for some combinations of
+// glyph and absolute x.
 function glyphs(font, text, size) {
   return shapeRun(font, text, size).run
     .map(({ g, x }) => ({ d: g.getPath(0, 0, size).toPathData(2), x }))
@@ -119,8 +115,7 @@ function paint(list, fill) {
 }
 
 // Cap height from the font itself where it is declared, else measured off a
-// capital. Point size says nothing about how big a name LOOKS, which is why
-// sizing by it made some repos shout and others whisper.
+// capital. Point size says little about how big a name looks.
 function capRatio(font) {
   const declared = font.tables.os2 && font.tables.os2.sCapHeight;
   if (declared) return declared / font.unitsPerEm;
@@ -131,12 +126,9 @@ function capRatio(font) {
 const nameFont = await loadWOFF2(EXCALIFONT, "excalifont");
 const claimFont = await loadTTF(LATO, "lato");
 
-// opentype.js's bezier flattening emits literal NaN control points for certain
-// glyph-and-SIZE combinations, independently of where the glyph ends up: two
-// letters of "excalidraw" came out NaN at the cap-fitted 183pt even when drawn
-// at the origin. Stepping the size down by a fraction of a point clears it, and
-// a fraction is invisible next to a 110px cap height, so the target stays what
-// the house standard says and only genuinely broken sizes are stepped past.
+// opentype.js emits NaN control points for certain combinations of glyph and size,
+// even when the glyph is drawn at the origin. Stepping the size down by half a
+// point clears it, which is invisible at a 110px cap height.
 function fitSize(font, text, start) {
   for (let size = start; size > start * 0.9; size -= 0.5) {
     const anyNaN = shapeRun(font, text, size).run.some(({ g }) =>
@@ -147,11 +139,8 @@ function fitSize(font, text, start) {
   throw new Error(`no NaN-free size for "${text}" near ${start}pt`);
 }
 
-// Cap height first, then width. The house target is a uniform cap height, but a
-// long name in caps at that height simply does not fit next to a 400px logo:
-// "EXCALIDRAW" wanted 1221px and ran 256px off the canvas. The standard's own
-// answer is to shrink such a name until it leaves a right margin, so the fit
-// wins over the target rather than the text running off the edge unnoticed.
+// Cap height first, then width. A long name in caps at the house cap height does
+// not fit beside a 400px logo, so it shrinks until it leaves a right margin.
 const RIGHT_MARGIN = 80;
 let nameSize = fitSize(nameFont, NAME, TARGET_CAP / capRatio(nameFont));
 {
@@ -165,7 +154,6 @@ let nameSize = fitSize(nameFont, NAME, TARGET_CAP / capRatio(nameFont));
 const nameW = shapeRun(nameFont, NAME, nameSize).width;
 const claimW = shapeRun(claimFont, CLAIM, claimSize).width;
 
-// --- the logo, without its backing plate ------------------------------------
 let logo = readFileSync(join(__dir, "excalidraw-logo.svg"), "utf8")
   .replace(/<\?xml[^>]*\?>\s*/, "")
   // The white rounded rect is the favicon's plate, not part of the mark.

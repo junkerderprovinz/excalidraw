@@ -3,7 +3,7 @@ name: Build & Push Docker Image
 # Builds the multi-arch image from the Dockerfile and pushes it to GHCR on every
 # push to main (and manually). Tags: :latest and :sha-<short>. Also mirrors to
 # Docker Hub (docker.io/<DOCKERHUB_USERNAME>/excalidraw) once the
-# DOCKERHUB_USERNAME variable + DOCKERHUB_TOKEN secret are set together; until
+# DOCKERHUB_USERNAME variable and the DOCKERHUB_TOKEN secret are both set; until
 # then the build stays GHCR-only.
 
 on:
@@ -23,8 +23,8 @@ permissions:
 
 env:
   IMAGE_NAME: ghcr.io/junkerderprovinz/excalidraw
-  # Opt JS-based actions into Node 24 ahead of the 2026-06-16 forced switch,
-  # silencing the Node 20 deprecation warning on checkout/docker actions.
+  # Runs JS-based actions on Node 24, which silences the Node 20 deprecation
+  # warning on the checkout and docker actions.
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
@@ -48,8 +48,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Docker Hub mirror — active only once DOCKERHUB_USERNAME (variable) and
-      # DOCKERHUB_TOKEN (secret) are set together; otherwise skipped (GHCR-only).
+      # Docker Hub mirror, active only once DOCKERHUB_USERNAME (variable) and
+      # DOCKERHUB_TOKEN (secret) are both set; otherwise skipped.
       - name: Log in to Docker Hub
         if: ${{ vars.DOCKERHUB_USERNAME != '' }}
         uses: docker/login-action@v4
@@ -68,10 +68,9 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
             type=sha,prefix=sha-,format=short
 
-      # Smoke-test gate: build the amd64 image, boot it, and require it to serve /
+      # Smoke-test gate: build the images, boot them and require them to serve /
       # before anything is pushed. A green Docker build only proves the image
-      # *builds* — this proves it actually *starts* (catches a custom-server /
-      # native-addon / standalone-trace crash that would otherwise reach :latest).
+      # builds, not that it starts.
       - name: Build amd64 image for smoke test
         uses: docker/build-push-action@v7
         with:
@@ -94,11 +93,10 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # Boot BOTH published arches before anything is pushed — :latest is
-      # multi-arch, so a green amd64 alone would still let a broken arm64 image
-      # (e.g. its QEMU-built better-sqlite3 addon) reach :latest. arm64 runs
-      # under QEMU emulation here, so it gets a larger boot budget.
-      - name: Smoke test — both arches must boot and serve /
+      # Both published arches have to boot, because :latest is multi-arch and a
+      # green amd64 alone would let a broken arm64 image through. arm64 runs under
+      # QEMU here, so it gets a larger boot budget.
+      - name: "Smoke test: both arches must boot and serve /"
         run: |
           set -euo pipefail
           smoke() {
@@ -115,7 +113,7 @@ jobs:
               fi
               sleep 1
             done
-            echo "❌ ${platform} did not serve / within ${budget}s — logs:"
+            echo "❌ ${platform} did not serve / within ${budget}s, logs:"
             docker logs "$name" || true
             docker rm -f "$name" >/dev/null
             echo "::endgroup::"
@@ -124,9 +122,9 @@ jobs:
           smoke excalidraw:smoke-amd64 linux/amd64 60
           smoke excalidraw:smoke-arm64 linux/arm64 240
 
-      # Non-blocking CVE scan of the locally-built amd64 image. Reports HIGH/CRITICAL
-      # (fixable only) to the Security tab; exit-code stays 0 so it never fails the
-      # build — a fresh advisory should surface, not block a release.
+      # Non-blocking CVE scan of the locally built amd64 image. Reports HIGH and
+      # CRITICAL (fixable only) to the Security tab; exit-code stays 0 because a
+      # fresh advisory should surface, not block a release.
       - name: Scan image for CVEs (Trivy)
         uses: aquasecurity/trivy-action@v0.36.0
         with:
@@ -157,27 +155,19 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # Mirror the GitHub README to the Docker Hub repo's Overview.
-      #
-      # This uses DOCKERHUB_TOKEN, the same access token the push above uses.
-      # It used to use a separate DOCKERHUB_PASSWORD, on the belief that a push
-      # token cannot edit a description. That was measured wrong on 2026-09-05:
-      # an access token with read, write and delete scope edits it fine, while
-      # the account password is refused outright with 401, because Docker Hub's
-      # legacy login endpoint rejects a password once 2FA is on. One secret,
-      # and the one that actually works.
+      # Mirror the GitHub README to the Docker Hub repo's Overview, with the same
+      # access token the push uses. A token with read, write and delete scope can
+      # edit the description; the account password cannot, because Docker Hub's
+      # legacy login endpoint refuses it with 401 once 2FA is on.
       - name: Docker Hub description sync ready?
         id: dhdesc
         if: ${{ vars.DOCKERHUB_USERNAME != '' && github.event_name != 'pull_request' }}
         env:
           PW: ${{ secrets.DOCKERHUB_TOKEN }}
         run: |
-          if [ -n "$PW" ]; then echo "go=true" >> "$GITHUB_OUTPUT"; else echo "DOCKERHUB_TOKEN not set — skipping Docker Hub description sync"; echo "go=false" >> "$GITHUB_OUTPUT"; fi
-      # Never fatal. The image is already pushed by the time this runs, and a
-      # description that did not update is a cosmetic problem on a listing page,
-      # not a reason to mark a good build red. The first run on this repo failed
-      # with 401 while the push itself succeeded, which is exactly the shape this
-      # guards against: the two use different credentials.
+          if [ -n "$PW" ]; then echo "go=true" >> "$GITHUB_OUTPUT"; else echo "DOCKERHUB_TOKEN not set, skipping Docker Hub description sync"; echo "go=false" >> "$GITHUB_OUTPUT"; fi
+      # Never fatal: the image is already pushed, and a description that did not
+      # update is cosmetic, not a reason to mark a good build red.
       - name: Sync README to Docker Hub
         if: ${{ steps.dhdesc.outputs.go == 'true' }}
         continue-on-error: true

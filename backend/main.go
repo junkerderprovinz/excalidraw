@@ -1,26 +1,18 @@
-// Command excalidraw-store is the small storage service this image ships instead
-// of the usual one.
-//
-// Excalidraw's own frontend needs three things kept somewhere:
+// Command excalidraw-store keeps what Excalidraw's frontend needs stored:
 //
 //	scenes  a drawing published as a shareable link
 //	rooms   the encrypted scene of a live session, so a latecomer sees the
 //	        current state and the session survives everyone closing the tab
 //	files   images pasted into a drawing
 //
-// The room server only relays messages between connected browsers; it stores
-// nothing, which is why a separate store exists at all. Upstream that store is
-// Google Firestore, and the usual self-hosted replacement is a Node service
-// whose published image has not moved since February 2022.
+// The room server only relays messages between connected browsers and stores
+// nothing. Upstream the store is Google Firestore, and the usual self-hosted
+// replacement is a Node service whose published image has not moved since
+// February 2022; this serves the same routes from one static binary over SQLite.
 //
-// This is that service, in one static binary against SQLite: the same routes,
-// no Node, no dependency that stopped being maintained while nobody looked.
-//
-// Everything stored here is already ENCRYPTED by the browser. The key lives in
-// the URL fragment after the "#", which browsers never send to a server, so this
-// service holds ciphertext it cannot read. That is a property of Excalidraw's
-// design, not something this code has to arrange, but it is the reason a plain
-// blob store is enough and no access control is needed for the blobs themselves.
+// The browser encrypts everything stored here with a key from the URL fragment,
+// which browsers never send to a server, so the service holds ciphertext it
+// cannot read and a plain blob store without access control is enough.
 package main
 
 import (
