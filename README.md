@@ -73,7 +73,7 @@ infrastructure: a shared link is stored on their server, a live session keeps it
 Firestore, the fonts come from a CDN, and an analytics script loads on every visit.
 
 None of that is a criticism of the project. It is how a free hosted service pays for itself, and
-all of it is configurable at BUILD time, which is precisely why the published image cannot offer
+all of it is configurable at **build** time, which is precisely why the published image cannot offer
 it as a setting.
 
 This image is that build, done differently. Everything above points back at the container, and a
@@ -205,7 +205,7 @@ cd backend && go test ./...
 
 ## 9. Updating Excalidraw
 
-The upstream commit is pinned in the `Dockerfile` as `EXCALIDRAW_SHA`, deliberately, so the image
+The upstream commit is pinned in the `Dockerfile` as `EXCALIDRAW_SHA`, so the image
 does not change under you. To move it forward, set the new commit and rebuild. If the replaced file
 has changed upstream, the build fails at the TypeScript step rather than silently shipping a broken
 whiteboard, and the gate independently checks that the two switchable addresses are still where the

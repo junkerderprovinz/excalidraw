@@ -33,7 +33,7 @@
 </head>
 <body>
 
-<h1>excalidraw &ndash; the whiteboard, with nothing phoning home</h1>
+<h1>excalidraw: the whiteboard, with nothing phoning home</h1>
 <p class="subtitle">The same Excalidraw you know, built so every part of it answers on your own server.</p>
 
 <p align="center">
@@ -82,22 +82,22 @@ error rather than pretending to work.</p>
 
 <h2>Highlights</h2>
 <ul>
-  <li><strong>The app is unchanged where it matters</strong> &mdash; built from a pinned Excalidraw
+  <li><strong>The app is unchanged where it matters</strong>: built from a pinned Excalidraw
       commit with one file replaced, the one that talks to Firestore. Same encryption, same merge
       logic when two people draw at once, different destination</li>
   <li><strong>Drawings are encrypted in your browser</strong> before they are stored, with the key
       in the part of the link after the <code>#</code>, which browsers never send to a server.
       The container holds bytes it cannot read</li>
-  <li><strong>Nothing to configure for the address</strong> &mdash; the app uses relative paths
+  <li><strong>Nothing to configure for the address</strong>: the app uses relative paths
       rather than an absolute URL built from a variable, so the same image works on a LAN IP,
       behind a reverse proxy and under a subdomain</li>
-  <li><strong>One volume holds everything</strong> &mdash; <code>/config</code> carries the SQLite
+  <li><strong>One volume holds everything</strong>: <code>/config</code> carries the SQLite
       database and the self-signed certificate. Back that up and you have backed up all of it</li>
   <li><strong>Three processes behind one nginx</strong>: the app, a small Go store over SQLite,
       and Excalidraw's own relay for live sessions. The usual self-hosted store is a Node service
       whose published image has not been rebuilt since February 2022; this one is built and
       tested here</li>
-  <li>Multi-arch &mdash; amd64 + arm64</li>
+  <li>Multi-arch: amd64 and arm64</li>
   <li>Image: <code>ghcr.io/junkerderprovinz/excalidraw:latest</code></li>
 </ul>
 
@@ -117,7 +117,7 @@ error rather than pretending to work.</p>
       proxy terminate TLS. Nothing needs to know its own address</li>
   <li>The proxy has to allow <strong>WebSocket upgrades</strong> on <code>/socket.io/</code>, or
       live collaboration cannot connect</li>
-  <li>And a <strong>body size</strong> large enough for a drawing with images &mdash; 64 MB matches
+  <li>And a <strong>body size</strong> large enough for a drawing with images: 64 MB matches
       what the container accepts</li>
   <li>Without a proxy, the container generates a self-signed certificate on first start and keeps
       it in <code>/config</code></li>
@@ -129,13 +129,13 @@ error rather than pretending to work.</p>
   <li>Unraid version (Settings &rarr; System Information)</li>
   <li>Image tag (<code>latest</code> or a pinned <code>vX.Y.Z</code>)</li>
   <li>Output of <code>docker logs --tail 200 excalidraw</code></li>
-  <li>Browser + OS you are using</li>
+  <li>Browser and OS you are using</li>
   <li>Whether you are going through a reverse proxy, and if so which one</li>
   <li>Whether you changed <code>ENABLE_LIBRARY</code>, <code>ENABLE_AI</code> or the
       <code>/config</code> mount</li>
 </ul>
 <p>For a collaboration problem specifically, say whether the other browser is on the same network,
-and whether the share dialog reported an error or simply never connected &mdash; those are two
+and whether the share dialog reported an error or simply never connected. Those are two
 different faults.</p>
 <p>GitHub issues with the same information are just as welcome:
 <a href="https://github.com/junkerderprovinz/excalidraw/issues">github.com/junkerderprovinz/excalidraw/issues</a></p>
@@ -149,7 +149,7 @@ pointed at somebody else's server, you can
 
 <hr>
 
-<p class="footnote">Self-hosted, MIT-licensed &mdash; you run it, you own your data and the responsibility.</p>
+<p class="footnote">Self-hosted, MIT-licensed. You run it, you own your data and the responsibility.</p>
 
 </body>
 </html>
