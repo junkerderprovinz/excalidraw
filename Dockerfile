@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
 # excalidraw: a whiteboard that keeps to itself
 #
 # The published Excalidraw image is nginx over a built SPA, and that SPA talks
@@ -38,7 +38,7 @@ ARG EXCALIDRAW_SHA=214cd6e6e8ac3ad6b68486aa7aa7241abdf9445f
 # The SPA, built once on the build platform: the output is JavaScript and the
 # same for every target, while compiling Excalidraw under QEMU for arm64 takes the
 # build from minutes into the better part of an hour.
-FROM --platform=$BUILDPLATFORM node:24-alpine AS web
+FROM --platform=$BUILDPLATFORM node:24-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1 AS web
 ARG EXCALIDRAW_SHA
 RUN apk add --no-cache git python3 make g++
 WORKDIR /src
@@ -69,7 +69,7 @@ RUN yarn build:app:docker
 # has not moved since February 2022; this is a single static binary over SQLite
 # with the same routes (see backend/main.go). Cross-compiled on the build
 # platform, since Go does that in one step.
-FROM --platform=$BUILDPLATFORM golang:1.25-alpine AS store
+FROM --platform=$BUILDPLATFORM golang:1.25-alpine@sha256:1ae0735f00daffa3aaf1363a5184c0d2dc55c78e3db4ec70241cdac97bf84b59 AS store
 ARG TARGETOS
 ARG TARGETARCH
 WORKDIR /src
@@ -86,13 +86,13 @@ FROM excalidraw/excalidraw-room@sha256:2fe999f9be4379e3ee282fc45d75d84a691a6383d
 # Removes the last outbound references at build time, so the running container
 # never reaches for the network and a build that cannot make the image
 # self-contained fails instead of shipping.
-FROM --platform=$BUILDPLATFORM alpine:3.24 AS patch
+FROM --platform=$BUILDPLATFORM alpine:3.24@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6 AS patch
 RUN apk add --no-cache python3
 COPY --from=web /src/excalidraw-app/build /html
 COPY rootfs/usr/local/bin/patch-spa.py /patch-spa.py
 RUN python3 /patch-spa.py /html
 
-FROM node:24-alpine
+FROM node:24-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1
 
 RUN apk add --no-cache nginx openssl tini \
  && rm -f /etc/nginx/http.d/default.conf
