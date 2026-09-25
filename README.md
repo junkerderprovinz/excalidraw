@@ -233,7 +233,7 @@ You do not have to take my word for it. The code is open and every release note 
 
 ## 12. Support this project
 
-Questions via the support thread, bugs, ideas and feature requests via [GitHub issues](https://github.com/junkerderprovinz/excalidraw/issues).
+Questions via the [support thread](https://forums.unraid.net/topic/198811-support-junkerderprovinz-unraid-apps/), bugs, ideas and feature requests via [GitHub issues](https://github.com/junkerderprovinz/excalidraw/issues).
 
 A one-knight job: I build it, keep it running, work through the issues and add what people ask for, until nothing is missing. It is free, with no accounts, no telemetry, no ads and no paid tier. No asterisk anywhere. Nothing readable ever leaves your own walls. Forged on evenings and weekends, with heart and stubbornness.
 
