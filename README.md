@@ -26,6 +26,16 @@ collaboration, the session scene, the fonts and the icons all come from your own
 browser never contacts anyone else. One container, one port, nothing to configure.
 </p>
 
+<!-- download-buttons: written by scripts/gen_download_buttons.py -->
+<p align="center">
+  <a href="https://ca.unraid.net/apps/excalidraw-12jk2zv0fttlyf"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=a82cc8264e34#svgView(viewBox(0,0,841.9,245.3))" alt="Install from Unraid&#x27;s Community Applications" width="160" height="46.618"></a>
+  &nbsp;
+  <a href="https://hub.docker.com/r/junkerderprovinz/excalidraw/"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=a82cc8264e34#svgView(viewBox(866,0,841.9,245.3))" alt="Run it with Docker" width="160" height="46.618"></a>
+  &nbsp;
+  <a href="https://github.com/junkerderprovinz/excalidraw/releases/latest"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=a82cc8264e34#svgView(viewBox(1732,0,841.9,245.3))" alt="Download the source archive" width="160" height="46.618"></a>
+</p>
+<!-- /download-buttons -->
+
 <br>
 
 <p align="center">
@@ -36,66 +46,59 @@ A one-knight job: I build it, keep it running, work through the issues and add w
 If it has earned a place on your server or computer, toss a coin to your knight: it helps cover the costs and keeps the project alive. It also makes this knight's heart beat a little faster. Three ways below, whichever suits you.
 </p>
 
-<br>
-
+<!-- give-buttons: written by scripts/gen_download_buttons.py -->
 <p align="center">
-  <a href="https://buymeacoffee.com/junkerderprovinz"><img src="https://raw.githubusercontent.com/junkerderprovinz/junkerderprovinz/main/donate/buttons/give.svg#svgView(viewBox(0,0,841.9,245.3))" alt="Buy me a coffee" width="160" height="46.62"></a>
+  <a href="https://buymeacoffee.com/junkerderprovinz"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=a82cc8264e34#svgView(viewBox(2598,0,841.9,245.3))" alt="Buy me a coffee" width="160" height="46.618"></a>
   &nbsp;
-  <a href="https://www.paypal.com/donate/?hosted_button_id=76FVV52TKXTUS"><img src="https://raw.githubusercontent.com/junkerderprovinz/junkerderprovinz/main/donate/buttons/give.svg#svgView(viewBox(841.9,0,841.9,245.3))" alt="PayPal" width="160" height="46.62"></a>
+  <a href="https://www.paypal.com/donate/?hosted_button_id=76FVV52TKXTUS"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=a82cc8264e34#svgView(viewBox(3464,0,841.9,245.3))" alt="PayPal" width="160" height="46.618"></a>
   &nbsp;
-  <a href="https://junkerderprovinz.github.io/junkerderprovinz/"><img src="https://raw.githubusercontent.com/junkerderprovinz/junkerderprovinz/main/donate/buttons/give.svg#svgView(viewBox(1683.8,0,841.9,245.3))" alt="Donate with crypto" width="160" height="46.62"></a>
+  <a href="https://junkerderprovinz.github.io/junkerderprovinz/"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=a82cc8264e34#svgView(viewBox(4330,0,841.9,245.3))" alt="Donate with crypto" width="160" height="46.618"></a>
 </p>
+<!-- /give-buttons -->
 
 <br>
 
 ## Table of Contents
 
-1. [What is this?](#1-what-is-this)
-2. [Screenshots](#2-screenshots)
-3. [What it keeps off the internet](#3-what-it-keeps-off-the-internet)
-4. [How it is built](#4-how-it-is-built)
-5. [Quick Start on Unraid](#5-quick-start-on-unraid)
-6. [Configuration](#6-configuration)
-7. [Reverse Proxy](#7-reverse-proxy)
-8. [Building it yourself](#8-building-it-yourself)
-9. [Updating Excalidraw](#9-updating-excalidraw)
-10. [License](#10-license)
-11. [How AI is used here](#11-how-ai-is-used-here)
-12. [Support this project](#12-support-this-project)
+1. [What it looks like](#1-what-it-looks-like)
+2. [What it does](#2-what-it-does)
+3. [How it compares](#3-how-it-compares)
+4. [Getting started](#4-getting-started)
+5. [How AI is used here](#5-how-ai-is-used-here)
+6. [Support this project](#6-support-this-project)
 
 <br>
 
-## 1. What is this?
+## 1. What it looks like
 
-Excalidraw is excellent, and the published image of it is a plain web server with the app inside.
-What that image does not tell you is how much of the app still talks to Excalidraw's own
-infrastructure: a shared link is stored on their server, a live session keeps its scene in Google
-Firestore, the fonts come from a CDN, and an analytics script loads on every visit.
-
-None of that is a criticism of the project. It is how a free hosted service pays for itself, and
-all of it is configurable at **build** time, which is precisely why the published image cannot offer
-it as a setting.
-
-This image is that build, done differently. Everything above points back at the container, and a
-gate in the build refuses to produce an image where any of it still points outward.
-
-<br>
-
-## 2. Screenshots
+The drawing and the names in these pictures are made up.
 
 <p align="center">
-  <img src=".github/assets/screenshots/canvas.png" width="90%" alt="A diagram on the canvas">
-  <br><em>The whiteboard itself, unchanged: this is Excalidraw, drawing the way it always does.</em>
+  <img src=".github/assets/screenshots/excalidraw-1.png" alt="Two people drawing on the same Excalidraw board in dark mode, the second one's cursor labelled Jonas" width="100%">
+  <br><em>A live session, relayed and stored by the container on your server</em>
 </p>
 
 <p align="center">
-  <img src=".github/assets/screenshots/collaboration.png" width="90%" alt="The share dialog">
-  <br><em>Both of these now run on your server. The session is end-to-end encrypted, and the key never leaves the link.</em>
+  <img src=".github/assets/screenshots/excalidraw-2.png" alt="The live collaboration dialog with the session link and its QR code" width="100%">
+  <br><em>The session link points at your server, and the key in it never reaches any server</em>
 </p>
 
 <br>
 
-## 3. What it keeps off the internet
+## 2. What it does
+
+- **The same Excalidraw.** Built from a pinned upstream commit, with one file replaced: the one that talks to Firestore. The encryption and the merge logic for two people drawing at once are unchanged.
+- **Shared links and live sessions stay home.** A small Go store over SQLite keeps scenes, rooms and pasted images, and Excalidraw's own room server relays between browsers.
+- **Nothing calls out.** The fonts come from the image and the analytics script is gone. A gate at the end of the build fails if any outside address is left in the app.
+- **Two features are switches.** The shape library (`ENABLE_LIBRARY`) and text to diagram (`ENABLE_AI`) would contact Excalidraw's servers, so they are off until you turn them on.
+- **HTTPS from the first start.** Live collaboration needs a secure context, so the container makes a self-signed certificate and keeps it in `/config`.
+- **Nothing to configure.** The app only uses relative paths, so the same image works on a LAN address, behind a reverse proxy and under a subdomain.
+
+<br>
+
+## 3. How it compares
+
+The published Excalidraw image runs the app unchanged, and the app still talks to Excalidraw's own infrastructure. That is how a free hosted service pays for itself, and it is all decided when the app is built, which is why the published image cannot offer it as a setting.
 
 | What | Upstream | Here |
 | --- | --- | --- |
@@ -105,125 +108,28 @@ gate in the build refuses to produce an image where any of it still points outwa
 | Collaboration socket | `oss-collab.excalidraw.com` | this container |
 | Fonts | a CDN | this container |
 | Analytics | `simpleanalyticscdn.com` | removed |
-| Shape library | `libraries.excalidraw.com` | off by default, switch below |
-| Text to diagram | `oss-ai.excalidraw.com` | off by default, switch below |
+| Shape library | `libraries.excalidraw.com` | off by default, `ENABLE_LIBRARY` |
+| Text to diagram | `oss-ai.excalidraw.com` | off by default, `ENABLE_AI` |
 
-The last two are real features rather than telemetry, so they are switches instead of a decision
-made for you. Off means the request never leaves your server; the feature reports an error rather
-than pretending to work.
-
-Everything a drawing contains is encrypted in your browser before it is stored, with the key in
-the part of the link after the `#`, which browsers never send to a server. The container holds
-bytes it cannot read.
+Everything a drawing contains is encrypted in your browser before it is stored. The key sits in the part of the link after the `#`, which browsers never send to a server, so the container holds bytes it cannot read.
 
 <br>
 
-## 4. How it is built
+## 4. Getting started
 
-Three processes behind one nginx:
-
-- **The app**, built from a pinned Excalidraw commit with one file replaced, the one that talks to
-  Firestore. Same encryption, same merge logic when two people draw at once, different destination.
-- **The store**, a small Go binary over SQLite, serving the scene, room and file endpoints the app
-  expects. The usual self-hosted store is a Node service whose published image has not been rebuilt
-  since February 2022; this one is built here and tested here.
-- **The room server**, Excalidraw's own relay. It forwards messages between browsers and stores
-  nothing, which is why the store exists.
-
-The addresses in the app are relative paths, not an absolute URL built from a variable you have to
-set. Your browser resolves them against whatever address you opened, so the same image works on a
-LAN IP, behind a reverse proxy and under a subdomain with nothing to configure.
-
-<br>
-
-## 5. Quick Start on Unraid
-
-Search for **excalidraw** in Community Applications, or add the container by hand:
+On Unraid, install **Excalidraw** from [Community Applications](https://ca.unraid.net/apps/excalidraw-12jk2zv0fttlyf). Anywhere else:
 
 ```bash
-docker run -d \
-  --name excalidraw \
-  -p 8080:80 \
-  -p 8443:443 \
-  -v /mnt/user/appdata/excalidraw:/config \
-  --restart unless-stopped \
-  ghcr.io/junkerderprovinz/excalidraw:latest
+docker run -d --name excalidraw   -p 8443:443   -v /path/to/config:/config   --restart unless-stopped   ghcr.io/junkerderprovinz/excalidraw:latest
 ```
 
-Then open **https://your-server:8443**.
+Then open `https://your-server:8443` and accept the certificate once. Use the HTTPS port: over plain HTTP the browser withholds the cryptography a live session needs, and starting one fails. `/config` holds the database and the certificate, so backing it up backs up everything.
 
-**Use the HTTPS port.** Live collaboration needs `crypto.subtle`, which browsers only provide in a
-secure context, so over plain HTTP the session button fails with a cryptography error. The
-container generates a self-signed certificate on first start and keeps it in `/config`, so your
-browser only has to be told once. The HTTP port stays for the single-user case where no session is
-ever started.
+Behind a reverse proxy, point it at port 80 of the container, allow WebSocket upgrades on `/socket.io/` and a body size of 64 MB.
 
 <br>
 
-## 6. Configuration
-
-| Variable | Default | What it does |
-| --- | --- | --- |
-| `ENABLE_LIBRARY` | `false` | Set to `true` to let the shape library load from `libraries.excalidraw.com`. |
-| `ENABLE_AI` | `false` | Set to `true` to let the text-to-diagram feature send your text to `oss-ai.excalidraw.com`. |
-| `STORE_DB` | `/config/store.sqlite` | Where drawings, rooms and images are kept. |
-| `TZ` | `Etc/UTC` | Time zone for the log. |
-
-`/config` holds the database and the certificate. Back it up and you have backed up everything.
-
-<br>
-
-## 7. Reverse Proxy
-
-Point your proxy at port **80** of the container and let it terminate TLS. The app only ever uses
-relative paths, so nothing needs to know its own address. Two things the proxy has to allow:
-
-- **WebSocket upgrades** on `/socket.io/`, or live collaboration cannot connect.
-- **A body size** large enough for a drawing with images, 64 MB matches what the container accepts.
-
-<br>
-
-## 8. Building it yourself
-
-```bash
-git clone https://github.com/junkerderprovinz/excalidraw.git
-cd excalidraw
-docker build -t excalidraw .
-```
-
-The build takes a while, because it compiles Excalidraw from source. The last step is the gate: it
-searches the finished app for every address that should be gone and fails the build if it finds
-one, so an image that calls home cannot be produced by accident.
-
-The Go store has its own tests:
-
-```bash
-cd backend && go test ./...
-```
-
-<br>
-
-## 9. Updating Excalidraw
-
-The upstream commit is pinned in the `Dockerfile` as `EXCALIDRAW_SHA`, so the image
-does not change under you. To move it forward, set the new commit and rebuild. If the replaced file
-has changed upstream, the build fails at the TypeScript step rather than silently shipping a broken
-whiteboard, and the gate independently checks that the two switchable addresses are still where the
-runtime expects them.
-
-<br>
-
-## 10. License
-
-This repository is licensed under **AGPL-3.0** (see [LICENSE](LICENSE)).
-
-Excalidraw itself is [MIT-licensed](https://github.com/excalidraw/excalidraw/blob/master/LICENSE)
-and belongs to the Excalidraw team. The two replaced files in `frontend/` are derived from theirs
-and say so in their headers. This project is not affiliated with or endorsed by Excalidraw.
-
-<br>
-
-## 11. How AI is used here
+## 5. How AI is used here
 
 One knight builds this, and AI is one of the tools I work with, the same way I work with an editor or a compiler. It helps me write code and documentation and it checks my work, and that saves me a good many evenings. It does not make the decisions, though. I read and understand everything before it ships, and if something here breaks, that is on me and not on the tool.
 
@@ -231,7 +137,7 @@ You do not have to take my word for it. The code is open and every release note 
 
 <br>
 
-## 12. Support this project
+## 6. Support this project
 
 Questions via the [support thread](https://forums.unraid.net/topic/198811-support-junkerderprovinz-unraid-apps/), bugs, ideas and feature requests via [GitHub issues](https://github.com/junkerderprovinz/excalidraw/issues).
 
@@ -239,10 +145,16 @@ A one-knight job: I build it, keep it running, work through the issues and add w
 
 If it has earned a place on your server or computer, toss a coin to your knight: it helps cover the costs and keeps the project alive. It also makes this knight's heart beat a little faster. Three ways below, whichever suits you.
 
+<!-- give-buttons: written by scripts/gen_download_buttons.py -->
 <p align="center">
-  <a href="https://buymeacoffee.com/junkerderprovinz"><img src="https://raw.githubusercontent.com/junkerderprovinz/junkerderprovinz/main/donate/buttons/give.svg#svgView(viewBox(0,0,841.9,245.3))" alt="Buy me a coffee" width="160" height="46.62"></a>
+  <a href="https://buymeacoffee.com/junkerderprovinz"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=a82cc8264e34#svgView(viewBox(2598,0,841.9,245.3))" alt="Buy me a coffee" width="160" height="46.618"></a>
   &nbsp;
-  <a href="https://www.paypal.com/donate/?hosted_button_id=76FVV52TKXTUS"><img src="https://raw.githubusercontent.com/junkerderprovinz/junkerderprovinz/main/donate/buttons/give.svg#svgView(viewBox(841.9,0,841.9,245.3))" alt="PayPal" width="160" height="46.62"></a>
+  <a href="https://www.paypal.com/donate/?hosted_button_id=76FVV52TKXTUS"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=a82cc8264e34#svgView(viewBox(3464,0,841.9,245.3))" alt="PayPal" width="160" height="46.618"></a>
   &nbsp;
-  <a href="https://junkerderprovinz.github.io/junkerderprovinz/"><img src="https://raw.githubusercontent.com/junkerderprovinz/junkerderprovinz/main/donate/buttons/give.svg#svgView(viewBox(1683.8,0,841.9,245.3))" alt="Donate with crypto" width="160" height="46.62"></a>
+  <a href="https://junkerderprovinz.github.io/junkerderprovinz/"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=a82cc8264e34#svgView(viewBox(4330,0,841.9,245.3))" alt="Donate with crypto" width="160" height="46.618"></a>
 </p>
+<!-- /give-buttons -->
+
+<br>
+
+<sub>Excalidraw is [MIT-licensed](https://github.com/excalidraw/excalidraw/blob/master/LICENSE) and belongs to the Excalidraw team. This image is not affiliated with or endorsed by Excalidraw.</sub>
