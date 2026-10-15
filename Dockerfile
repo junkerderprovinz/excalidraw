@@ -38,7 +38,7 @@ ARG EXCALIDRAW_SHA=214cd6e6e8ac3ad6b68486aa7aa7241abdf9445f
 # The SPA, built once on the build platform: the output is JavaScript and the
 # same for every target, while compiling Excalidraw under QEMU for arm64 takes the
 # build from minutes into the better part of an hour.
-FROM --platform=$BUILDPLATFORM node:24-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1 AS web
+FROM --platform=$BUILDPLATFORM node:24-alpine@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f AS web
 ARG EXCALIDRAW_SHA
 RUN apk add --no-cache git python3 make g++
 WORKDIR /src
@@ -92,7 +92,7 @@ COPY --from=web /src/excalidraw-app/build /html
 COPY rootfs/usr/local/bin/patch-spa.py /patch-spa.py
 RUN python3 /patch-spa.py /html
 
-FROM node:24-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1
+FROM node:24-alpine@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f
 
 RUN apk add --no-cache nginx openssl tini \
  && rm -f /etc/nginx/http.d/default.conf
