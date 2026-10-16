@@ -127,6 +127,14 @@ Then open `https://your-server:8443` and accept the certificate once. Use the HT
 
 Behind a reverse proxy, point it at port 80 of the container, allow WebSocket upgrades on `/socket.io/` and a body size of 64 MB.
 
+### Other Docker hosts
+
+[compose.yaml](compose.yaml) runs Excalidraw on any Linux server with Docker. Put it in a folder of its own and start it with `docker compose up -d`. The folders are created next to the file.
+
+- **Synology:** in Container Manager, create a project from the file (DSM 7.2 or newer).
+- **Proxmox:** run it in a VM or an LXC container that has Docker.
+- **MOS:** install Excalidraw from the [MOS Hub](https://mos-official.net/apps.html?search=Excalidraw).
+
 <br>
 
 ## 5. How AI is used here

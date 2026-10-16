@@ -1,0 +1,21 @@
+# Built from the Unraid template in junkerderprovinz/unraid-apps by
+# .github/gen-compose.py. Change the template there, not this file.
+#
+# Folders are created next to this file on the first start. Point the ones
+# that hold your own files (downloads, storage and the like) at real folders
+# first, and fill in every value marked "required".
+
+services:
+  excalidraw:
+    image: junkerderprovinz/excalidraw:latest
+    container_name: excalidraw
+    restart: unless-stopped
+    ports:
+      - "8443:443"
+      - "8080:80"
+    volumes:
+      - "./appdata:/config"
+    environment:
+      ENABLE_LIBRARY: "false"
+      ENABLE_AI: "false"
+      TZ: Europe/Berlin
