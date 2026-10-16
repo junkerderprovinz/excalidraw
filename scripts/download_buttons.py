@@ -9,9 +9,8 @@ REPO = "excalidraw"
 
 BUTTONS = {
     "unraid": "https://ca.unraid.net/apps/excalidraw-12jk2zv0fttlyf",
-    # A browser cannot download an image, so this opens its Docker Hub page,
-    # which carries the pull command and every tag.
-    "docker": "https://hub.docker.com/r/junkerderprovinz/excalidraw/",
+    "mos": "https://mos-official.net/apps.html?search=Excalidraw",
+    "compose": "https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/compose.yaml",
     # A release's "Source code (zip)" is the whole repository at that tag, and
     # GitHub gives the newest one no fixed address, so this leads to the release
     # that lists it.
