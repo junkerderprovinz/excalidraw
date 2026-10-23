@@ -7,7 +7,7 @@
 
 services:
   excalidraw:
-    image: junkerderprovinz/excalidraw:latest
+    image: junkerderprovinz/excalidraw:latest@sha256:ba59720aa1235b1c52912e941c23733d09f135e6b4bcbd435b178cf0cb1329d4
     container_name: excalidraw
     restart: unless-stopped
     ports:
