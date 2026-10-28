@@ -83,6 +83,16 @@ RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH}     go build -trimpath -
 # tags, only :latest, and collaboration would otherwise change under a rebuild.
 FROM excalidraw/excalidraw-room@sha256:2fe999f9be4379e3ee282fc45d75d84a691a6383dde33544514cc395287c7a70 AS room
 
+# Only the compiled server is taken from that image. Its node_modules holds the
+# whole toolchain (eslint, typescript, ts-node-dev) as runtime dependencies,
+# frozen in 2021, and that is where most of this image's scanner findings came
+# from. The four packages the server loads come from room/package.json instead.
+FROM --platform=$BUILDPLATFORM node:24-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53 AS room-deps
+WORKDIR /room
+COPY room/package.json room/package-lock.json ./
+RUN npm ci --omit=dev --ignore-scripts
+COPY --from=room /excalidraw-room/dist ./dist
+
 # Removes the last outbound references at build time, so the running container
 # never reaches for the network and a build that cannot make the image
 # self-contained fails instead of shipping.
@@ -94,12 +104,17 @@ RUN python3 /patch-spa.py /html
 
 FROM node:24-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53
 
+# Nothing here runs a package manager after the build, so npm, corepack and
+# yarn from the base image go, and their dependencies stop showing up in scans.
 RUN apk add --no-cache nginx openssl tini \
- && rm -f /etc/nginx/http.d/default.conf
+ && rm -f /etc/nginx/http.d/default.conf \
+ && rm -rf /usr/local/lib/node_modules /opt/yarn-v* \
+           /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack \
+           /usr/local/bin/yarn /usr/local/bin/yarnpkg
 
 COPY --from=patch /html /usr/share/nginx/html
 COPY --from=store /out/excalidraw-store /usr/local/bin/excalidraw-store
-COPY --from=room /excalidraw-room /opt/room
+COPY --from=room-deps /room /opt/room
 COPY rootfs/ /
 # The execute bit is set in git, but a checkout on a filesystem that does not
 # carry it (Windows, a zip download) would give an image that dies at startup

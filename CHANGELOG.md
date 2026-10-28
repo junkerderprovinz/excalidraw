@@ -5,6 +5,16 @@ release is in `.github/release-notes/`.
 
 ## Unreleased
 
+### 🔒 Security
+
+- The room server no longer ships the dependency tree of its upstream image,
+  which had not been rebuilt since 2023 and carried two critical and over
+  thirty high advisories (minimist, proxy-addr, express, socket.io, ws and
+  more). Its four runtime packages are installed fresh at fixed versions:
+  express 4.22.3, socket.io 4.8.4, debug 4.4.3 and dotenv 10.0.0.
+- npm, corepack and yarn are removed from the final image. Nothing uses them
+  at runtime, and the bundled npm brought advisories of its own.
+
 ### ⚡ Improved
 
 - Tidied the code comments and log messages.
