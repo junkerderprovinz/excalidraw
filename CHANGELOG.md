@@ -3,21 +3,14 @@
 All notable changes to this image are documented here. The full text of each
 release is in `.github/release-notes/`.
 
-## Unreleased
+## 1.0.1 - 2026-10-29
 
-### 🔒 Security
+The room server ships only the four packages it runs, and the image no longer
+carries a package manager. Also new: a compose file for other Docker hosts and
+store buttons for MOS, ZimaOS and Umbrel in the README. The Node.js base image
+and SQLite are updated.
 
-- The room server no longer ships the dependency tree of its upstream image,
-  which had not been rebuilt since 2023 and carried two critical and over
-  thirty high advisories (minimist, proxy-addr, express, socket.io, ws and
-  more). Its four runtime packages are installed fresh at fixed versions:
-  express 4.22.3, socket.io 4.8.4, debug 4.4.3 and dotenv 10.0.0.
-- npm, corepack and yarn are removed from the final image. Nothing uses them
-  at runtime, and the bundled npm brought advisories of its own.
-
-### ⚡ Improved
-
-- Tidied the code comments and log messages.
+See [.github/release-notes/v1.0.1.md](.github/release-notes/v1.0.1.md).
 
 ## 1.0.0 — 2026-09-05
 

@@ -85,8 +85,8 @@ FROM excalidraw/excalidraw-room@sha256:2fe999f9be4379e3ee282fc45d75d84a691a6383d
 
 # Only the compiled server is taken from that image. Its node_modules holds the
 # whole toolchain (eslint, typescript, ts-node-dev) as runtime dependencies,
-# frozen in 2021, and that is where most of this image's scanner findings came
-# from. The four packages the server loads come from room/package.json instead.
+# years old and full of advisories. The four packages the server loads come
+# from room/package.json instead.
 FROM --platform=$BUILDPLATFORM node:24-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53 AS room-deps
 WORKDIR /room
 COPY room/package.json room/package-lock.json ./
@@ -105,7 +105,7 @@ RUN python3 /patch-spa.py /html
 FROM node:24-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53
 
 # Nothing here runs a package manager after the build, so npm, corepack and
-# yarn from the base image go, and their dependencies stop showing up in scans.
+# yarn from the base image go, and their advisories with them.
 RUN apk add --no-cache nginx openssl tini \
  && rm -f /etc/nginx/http.d/default.conf \
  && rm -rf /usr/local/lib/node_modules /opt/yarn-v* \
