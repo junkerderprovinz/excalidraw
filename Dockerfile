@@ -38,7 +38,7 @@ ARG EXCALIDRAW_SHA=214cd6e6e8ac3ad6b68486aa7aa7241abdf9445f
 # The SPA, built once on the build platform: the output is JavaScript and the
 # same for every target, while compiling Excalidraw under QEMU for arm64 takes the
 # build from minutes into the better part of an hour.
-FROM --platform=$BUILDPLATFORM node:24-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53 AS web
+FROM --platform=$BUILDPLATFORM node:24-alpine@sha256:8a32c8cf649a49915a66e81e7a609223c708d0adabf288ee3f4077d765542f85 AS web
 ARG EXCALIDRAW_SHA
 RUN apk add --no-cache git python3 make g++
 WORKDIR /src
@@ -87,7 +87,7 @@ FROM excalidraw/excalidraw-room@sha256:2fe999f9be4379e3ee282fc45d75d84a691a6383d
 # whole toolchain (eslint, typescript, ts-node-dev) as runtime dependencies,
 # years old and full of advisories. The four packages the server loads come
 # from room/package.json instead.
-FROM --platform=$BUILDPLATFORM node:24-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53 AS room-deps
+FROM --platform=$BUILDPLATFORM node:24-alpine@sha256:8a32c8cf649a49915a66e81e7a609223c708d0adabf288ee3f4077d765542f85 AS room-deps
 WORKDIR /room
 COPY room/package.json room/package-lock.json ./
 RUN npm ci --omit=dev --ignore-scripts
@@ -102,7 +102,7 @@ COPY --from=web /src/excalidraw-app/build /html
 COPY rootfs/usr/local/bin/patch-spa.py /patch-spa.py
 RUN python3 /patch-spa.py /html
 
-FROM node:24-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53
+FROM node:24-alpine@sha256:8a32c8cf649a49915a66e81e7a609223c708d0adabf288ee3f4077d765542f85
 
 # Nothing here runs a package manager after the build, so npm, corepack and
 # yarn from the base image go, and their advisories with them.
