@@ -3,6 +3,13 @@
 All notable changes to this image are documented here. The full text of each
 release is in `.github/release-notes/`.
 
+## 1.0.2 - 2026-11-05
+
+The room server moves to Express 5 and dotenv 18, the Node.js base image and
+SQLite are updated, and `latest` now only moves with a release.
+
+See [.github/release-notes/v1.0.2.md](.github/release-notes/v1.0.2.md).
+
 ## 1.0.1 - 2026-10-29
 
 The room server ships only the four packages it runs, and the image no longer
