@@ -26,27 +26,45 @@ collaboration, the session scene, the fonts and the icons all come from your own
 browser never contacts anyone else. One container, one port, nothing to configure.
 </p>
 
+<br>
+
+<p><a id="table-of-contents" href="#table-of-contents"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/assets/sections/table-of-contents-dark.svg"><img src=".github/assets/sections/table-of-contents.svg" alt="Table of Contents" width="100%"></picture></a></p>
+
+1. [Download](#1-download)
+2. [Support](#2-support)
+3. [What it looks like](#3-what-it-looks-like)
+4. [What it does](#4-what-it-does)
+5. [How it compares](#5-how-it-compares)
+6. [Getting started](#6-getting-started)
+7. [How AI is used here](#7-how-ai-is-used-here)
+
+<br>
+
+<p><a id="1-download" href="#1-download"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/assets/sections/1-download-dark.svg"><img src=".github/assets/sections/1-download.svg" alt="1. Download" width="100%"></picture></a></p>
+
 <!-- download-buttons: written by scripts/gen_download_buttons.py -->
 <p align="center">
-  <img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=074d32ddf165#svgView(viewBox(0,0,841.9,245.3))" alt="Server" width="160" height="46.618">
+  <picture><source media="(prefers-color-scheme: dark)" srcset=".github/assets/sections/group-server-dark.svg"><img src=".github/assets/sections/group-server.svg" alt="Server" width="100%"></picture>
 </p>
 <p align="center">
-  <a href="https://ca.unraid.net/apps/excalidraw-12jk2zv0fttlyf"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=074d32ddf165#svgView(viewBox(866,0,841.9,245.3))" alt="Install from Unraid&#x27;s Community Applications" width="160" height="46.618"></a>
+  <a href="https://ca.unraid.net/apps/excalidraw-12jk2zv0fttlyf"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=509c6fbfa82d#svgView(viewBox(0,0,841.9,245.3))" alt="Install from Unraid&#x27;s Community Applications" width="160" height="46.618"></a>
   &nbsp;
-  <a href="https://mos-official.net/apps.html?search=Excalidraw"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=074d32ddf165#svgView(viewBox(1732,0,841.9,245.3))" alt="Install from the MOS Hub" width="160" height="46.618"></a>
+  <a href="https://mos-official.net/apps.html?search=Excalidraw"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=509c6fbfa82d#svgView(viewBox(866,0,841.9,245.3))" alt="Install from the MOS Hub" width="160" height="46.618"></a>
   &nbsp;
-  <a href="https://github.com/junkerderprovinz/zimaos-apps#install"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=074d32ddf165#svgView(viewBox(2598,0,841.9,245.3))" alt="Install from the ZimaOS and CasaOS store" width="160" height="46.618"></a>
+  <a href="https://github.com/junkerderprovinz/zimaos-apps#install"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=509c6fbfa82d#svgView(viewBox(1732,0,841.9,245.3))" alt="Install from the ZimaOS and CasaOS store" width="160" height="46.618"></a>
   &nbsp;
-  <a href="https://github.com/junkerderprovinz/umbrel-apps#install"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=074d32ddf165#svgView(viewBox(3464,0,841.9,245.3))" alt="Install from the umbrelOS community app store" width="160" height="46.618"></a>
+  <a href="https://github.com/junkerderprovinz/umbrel-apps#install"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=509c6fbfa82d#svgView(viewBox(2598,0,841.9,245.3))" alt="Install from the umbrelOS community app store" width="160" height="46.618"></a>
 </p>
 <p align="center">
-  <a href="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/compose.yaml"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=074d32ddf165#svgView(viewBox(4330,0,841.9,245.3))" alt="Download the docker-compose file" width="160" height="46.618"></a>
+  <a href="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/compose.yaml"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=509c6fbfa82d#svgView(viewBox(3464,0,841.9,245.3))" alt="Download the docker-compose file" width="160" height="46.618"></a>
   &nbsp;
-  <a href="https://github.com/junkerderprovinz/excalidraw/releases/latest"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=074d32ddf165#svgView(viewBox(5196,0,841.9,245.3))" alt="Download the source archive" width="160" height="46.618"></a>
+  <a href="https://github.com/junkerderprovinz/excalidraw/releases/latest"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=509c6fbfa82d#svgView(viewBox(4330,0,841.9,245.3))" alt="Download the source archive" width="160" height="46.618"></a>
 </p>
 <!-- /download-buttons -->
 
 <br>
+
+<p><a id="2-support" href="#2-support"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/assets/sections/2-support-dark.svg"><img src=".github/assets/sections/2-support.svg" alt="2. Support" width="100%"></picture></a></p>
 
 <p align="center">
 A one-knight job: I build it, keep it running, work through the issues and add what people ask for, until nothing is missing. It is free, with no accounts, no telemetry, no ads and no paid tier. No asterisk anywhere. Nothing readable ever leaves your own walls. Forged on evenings and weekends, with heart and stubbornness.
@@ -58,28 +76,17 @@ If it has earned a place on your server or computer, toss a coin to your knight:
 
 <!-- give-buttons: written by scripts/gen_download_buttons.py -->
 <p align="center">
-  <a href="https://buymeacoffee.com/junkerderprovinz"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=074d32ddf165#svgView(viewBox(6062,0,841.9,245.3))" alt="Buy me a coffee" width="160" height="46.618"></a>
+  <a href="https://buymeacoffee.com/junkerderprovinz"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=509c6fbfa82d#svgView(viewBox(5196,0,841.9,245.3))" alt="Buy me a coffee" width="160" height="46.618"></a>
   &nbsp;
-  <a href="https://www.paypal.com/donate/?hosted_button_id=76FVV52TKXTUS"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=074d32ddf165#svgView(viewBox(6928,0,841.9,245.3))" alt="PayPal" width="160" height="46.618"></a>
+  <a href="https://www.paypal.com/donate/?hosted_button_id=76FVV52TKXTUS"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=509c6fbfa82d#svgView(viewBox(6062,0,841.9,245.3))" alt="PayPal" width="160" height="46.618"></a>
   &nbsp;
-  <a href="https://junkerderprovinz.github.io/junkerderprovinz/"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=074d32ddf165#svgView(viewBox(7794,0,841.9,245.3))" alt="Donate with crypto" width="160" height="46.618"></a>
+  <a href="https://junkerderprovinz.github.io/junkerderprovinz/"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=509c6fbfa82d#svgView(viewBox(6928,0,841.9,245.3))" alt="Donate with crypto" width="160" height="46.618"></a>
 </p>
 <!-- /give-buttons -->
 
 <br>
 
-## Table of Contents
-
-1. [What it looks like](#1-what-it-looks-like)
-2. [What it does](#2-what-it-does)
-3. [How it compares](#3-how-it-compares)
-4. [Getting started](#4-getting-started)
-5. [How AI is used here](#5-how-ai-is-used-here)
-6. [Support this project](#6-support-this-project)
-
-<br>
-
-## 1. What it looks like
+<p><a id="3-what-it-looks-like" href="#3-what-it-looks-like"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/assets/sections/3-what-it-looks-like-dark.svg"><img src=".github/assets/sections/3-what-it-looks-like.svg" alt="3. What it looks like" width="100%"></picture></a></p>
 
 The drawing and the names in these pictures are made up.
 
@@ -95,7 +102,7 @@ The drawing and the names in these pictures are made up.
 
 <br>
 
-## 2. What it does
+<p><a id="4-what-it-does" href="#4-what-it-does"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/assets/sections/4-what-it-does-dark.svg"><img src=".github/assets/sections/4-what-it-does.svg" alt="4. What it does" width="100%"></picture></a></p>
 
 - **The same Excalidraw.** Built from a pinned upstream commit, with one file replaced: the one that talks to Firestore. The encryption and the merge logic for two people drawing at once are unchanged.
 - **Shared links and live sessions stay home.** A small Go store over SQLite keeps scenes, rooms and pasted images, and Excalidraw's own room server relays between browsers.
@@ -106,7 +113,7 @@ The drawing and the names in these pictures are made up.
 
 <br>
 
-## 3. How it compares
+<p><a id="5-how-it-compares" href="#5-how-it-compares"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/assets/sections/5-how-it-compares-dark.svg"><img src=".github/assets/sections/5-how-it-compares.svg" alt="5. How it compares" width="100%"></picture></a></p>
 
 The published Excalidraw image runs the app unchanged, and the app still talks to Excalidraw's own infrastructure. That is how a free hosted service pays for itself, and it is all decided when the app is built, which is why the published image cannot offer it as a setting.
 
@@ -125,7 +132,7 @@ Everything a drawing contains is encrypted in your browser before it is stored. 
 
 <br>
 
-## 4. Getting started
+<p><a id="6-getting-started" href="#6-getting-started"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/assets/sections/6-getting-started-dark.svg"><img src=".github/assets/sections/6-getting-started.svg" alt="6. Getting started" width="100%"></picture></a></p>
 
 On Unraid, install **Excalidraw** from [Community Applications](https://ca.unraid.net/apps/excalidraw-12jk2zv0fttlyf). Anywhere else:
 
@@ -149,7 +156,7 @@ Behind a reverse proxy, point it at port 80 of the container, allow WebSocket up
 
 <br>
 
-## 5. How AI is used here
+<p><a id="7-how-ai-is-used-here" href="#7-how-ai-is-used-here"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/assets/sections/7-how-ai-is-used-here-dark.svg"><img src=".github/assets/sections/7-how-ai-is-used-here.svg" alt="7. How AI is used here" width="100%"></picture></a></p>
 
 One knight builds this, and AI is one of the tools I work with, the same way I work with an editor or a compiler. It helps me write code and documentation and it checks my work, and that saves me a good many evenings. It does not make the decisions, though. I read and understand everything before it ships, and if something here breaks, that is on me and not on the tool.
 
@@ -157,24 +164,6 @@ You do not have to take my word for it. The code is open and every release note 
 
 <br>
 
-## 6. Support this project
-
 Questions via the [support thread](https://forums.unraid.net/topic/198811-support-junkerderprovinz-unraid-apps/), bugs, ideas and feature requests via [GitHub issues](https://github.com/junkerderprovinz/excalidraw/issues).
-
-A one-knight job: I build it, keep it running, work through the issues and add what people ask for, until nothing is missing. It is free, with no accounts, no telemetry, no ads and no paid tier. No asterisk anywhere. Nothing readable ever leaves your own walls. Forged on evenings and weekends, with heart and stubbornness.
-
-If it has earned a place on your server or computer, toss a coin to your knight: it helps cover the costs and keeps the project alive. It also makes this knight's heart beat a little faster. Three ways below, whichever suits you.
-
-<!-- give-buttons: written by scripts/gen_download_buttons.py -->
-<p align="center">
-  <a href="https://buymeacoffee.com/junkerderprovinz"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=074d32ddf165#svgView(viewBox(6062,0,841.9,245.3))" alt="Buy me a coffee" width="160" height="46.618"></a>
-  &nbsp;
-  <a href="https://www.paypal.com/donate/?hosted_button_id=76FVV52TKXTUS"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=074d32ddf165#svgView(viewBox(6928,0,841.9,245.3))" alt="PayPal" width="160" height="46.618"></a>
-  &nbsp;
-  <a href="https://junkerderprovinz.github.io/junkerderprovinz/"><img src="https://raw.githubusercontent.com/junkerderprovinz/excalidraw/main/.github/assets/download-buttons/buttons.svg?v=074d32ddf165#svgView(viewBox(7794,0,841.9,245.3))" alt="Donate with crypto" width="160" height="46.618"></a>
-</p>
-<!-- /give-buttons -->
-
-<br>
 
 <sub>Excalidraw is [MIT-licensed](https://github.com/excalidraw/excalidraw/blob/master/LICENSE) and belongs to the Excalidraw team. This image is not affiliated with or endorsed by Excalidraw.</sub>
