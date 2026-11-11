@@ -2,6 +2,8 @@ module github.com/junkerderprovinz/excalidraw/backend
 
 go 1.26.0
 
+toolchain go1.27.4
+
 require modernc.org/sqlite v1.62.0
 
 require (
