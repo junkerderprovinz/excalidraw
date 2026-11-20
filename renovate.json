@@ -1,7 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "local>junkerderprovinz/junkerderprovinz//renovate/base"
+    "local>junkerderprovinz/junkerderprovinz//renovate/base",
+    "local>junkerderprovinz/junkerderprovinz//renovate/components"
   ],
   "packageRules": [
     {
@@ -13,6 +14,32 @@
         "junkerderprovinz/excalidraw"
       ],
       "enabled": false
+    },
+    {
+      "description": "The frontend patch has to be checked against every new Excalidraw commit, so a commit update waits for that instead of merging itself.",
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchDepNames": [
+        "excalidraw"
+      ],
+      "automerge": false
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "The Excalidraw commit the image builds, followed on upstream's master branch. The shared pattern cannot hold a bare commit, which git-refs reads as a digest.",
+      "managerFilePatterns": [
+        "/(^|/)Dockerfile$/"
+      ],
+      "matchStrings": [
+        "ARG EXCALIDRAW_SHA=(?<currentDigest>[a-f0-9]{40})"
+      ],
+      "currentValueTemplate": "master",
+      "depNameTemplate": "excalidraw",
+      "packageNameTemplate": "https://github.com/excalidraw/excalidraw",
+      "datasourceTemplate": "git-refs"
     }
   ]
 }
