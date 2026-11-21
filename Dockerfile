@@ -33,7 +33,7 @@
 # The upstream commit this image is built from. Pinned, never "main": a
 # whiteboard that rebuilds into something different every night cannot be
 # supported, and the frontend patch has to be re-checked whenever it moves.
-ARG EXCALIDRAW_SHA=214cd6e6e8ac3ad6b68486aa7aa7241abdf9445f
+ARG EXCALIDRAW_SHA=2c3dcc06ec807e81ab9437eceb1a8f7a3c590743
 
 # The SPA, built once on the build platform: the output is JavaScript and the
 # same for every target, while compiling Excalidraw under QEMU for arm64 takes the
