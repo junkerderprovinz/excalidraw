@@ -10,7 +10,7 @@ the time this runs. Two things are not variables:
   fonts      referenced against a CDN from index.html, the stylesheet and
              `window.EXCALIDRAW_ASSET_PATH`, even though most of the files are
              in the build. The missing ones are fetched here, once.
-  analytics  a script the page builds and appends at runtime.
+  analytics  a script the editor and the 404 page build and append at runtime.
 
 Python rather than sed, because line-based edits are the wrong tool for minified
 HTML: they leave fragments behind that fail only in the browser console.
@@ -89,19 +89,26 @@ def main():
     # Analytics: remove the whole script element, not the line that names the
     # host. The script is built at runtime, and a leftover half of it is a syntax
     # error on every load.
-    with open(index, encoding="utf-8", errors="surrogateescape") as fh:
-        html = fh.read()
-    before = html
-    html = re.sub(
-        r"<script>(?:(?!</script>).)*simpleanalytics(?:(?!</script>).)*</script>",
-        "",
-        html,
-        flags=re.S,
-    )
-    if html == before and "simpleanalytics" in before:
-        fail("the analytics script is there but the pattern did not match it")
-    with open(index, "w", encoding="utf-8", errors="surrogateescape") as fh:
-        fh.write(html)
+    for path in text_files(root):
+        if not path.endswith(".html"):
+            continue
+        with open(path, encoding="utf-8", errors="surrogateescape") as fh:
+            html = fh.read()
+        if "simpleanalytics" not in html:
+            continue
+        stripped = re.sub(
+            r"<script>(?:(?!</script>).)*simpleanalytics(?:(?!</script>).)*</script>",
+            "",
+            html,
+            flags=re.S,
+        )
+        if stripped == html:
+            fail(
+                f"{os.path.relpath(path, root)}: the analytics script is there "
+                "but the pattern did not match it"
+            )
+        with open(path, "w", encoding="utf-8", errors="surrogateescape") as fh:
+            fh.write(stripped)
 
     # If any outbound reference survives, the build stops instead of shipping an
     # image whose description is untrue.
