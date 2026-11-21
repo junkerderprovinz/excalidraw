@@ -104,6 +104,9 @@ RUN python3 /patch-spa.py /html
 
 FROM node:24-alpine@sha256:116b800c3754b440ee0aa3ed2f20f5bf3d99a554bfd9adeea09ea8017f6e85f5
 
+# The upgrade takes the security fixes published since the base image was built.
+RUN apk upgrade --no-cache
+
 # Nothing here runs a package manager after the build, so npm, corepack and
 # yarn from the base image go, and their advisories with them.
 RUN apk add --no-cache nginx openssl tini \
