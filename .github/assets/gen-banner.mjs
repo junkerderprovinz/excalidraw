@@ -6,13 +6,14 @@
  * House standard: logo left, ink-left at x=165 and ink-centre at y=250, largest
  * ink dimension ~400px; the name to its right in the project's own font, sized
  * by cap height so every repo's name reads the same size; exactly one claim in
- * Lato underneath, grey. Nothing else on the banner.
+ * Bree Light underneath, grey. Nothing else on the banner.
  *
  * The name is set in Excalifont, Excalidraw's own hand-drawn face, because the
  * house rule is to use the real official font rather than a lookalike. It ships
  * as woff2, which opentype.js cannot read, so the generator fetches it and
- * converts it with fontTools (`pip install fonttools brotli`). Neither font is
- * committed: they are fetched at runtime and cached in the OS temp directory.
+ * converts it with fontTools (`pip install fonttools brotli`). It is fetched at
+ * runtime, cached in the OS temp directory and never committed. Bree is read as
+ * TTF from HOUSE_FONTS (default %LOCALAPPDATA%\halleluja-fonts).
  *
  * The logo is Excalidraw's own favicon with its white rounded backing plate
  * removed, because a banner supplies its own ground and a plate inside it reads
@@ -52,7 +53,6 @@ const claimSize = 44, gap = 70, lineGap = 8, startX = 165;
 // uses, so a silent upstream change cannot swap the artwork under the banner.
 const CDN = "https://excalidraw.nyc3.cdn.digitaloceanspaces.com/oss/fonts";
 const EXCALIFONT = `${CDN}/Excalifont/Excalifont-Regular-a88b72a24fb54c9f94e3b5fdaa7481c9.woff2`;
-const LATO = "https://cdn.jsdelivr.net/gh/google/fonts@main/ofl/lato/Lato-Regular.ttf";
 
 async function fetchTo(url, path) {
   if (existsSync(path)) return path;
@@ -60,12 +60,6 @@ async function fetchTo(url, path) {
   if (!res.ok) throw new Error(`fetch ${url}: ${res.status}`);
   writeFileSync(path, Buffer.from(await res.arrayBuffer()));
   return path;
-}
-
-async function loadTTF(url, cacheName) {
-  const path = await fetchTo(url, join(tmpdir(), `excalidraw-${cacheName}.ttf`));
-  const buf = readFileSync(path);
-  return opentype.parse(buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength));
 }
 
 // opentype.js reads TTF, the web ships woff2. fontTools does the one step in
@@ -124,7 +118,9 @@ function capRatio(font) {
 }
 
 const nameFont = await loadWOFF2(EXCALIFONT, "excalifont");
-const claimFont = await loadTTF(LATO, "lato");
+// The house typeface is licensed, so it is read from a local folder and never committed.
+const fonts = process.env.HOUSE_FONTS ?? join(process.env.LOCALAPPDATA ?? tmpdir(), "halleluja-fonts");
+const claimFont = opentype.parse(readFileSync(join(fonts, "bree-light.ttf")).buffer);
 
 // opentype.js emits NaN control points for certain combinations of glyph and size,
 // even when the glyph is drawn at the origin. Stepping the size down by half a
