@@ -11,7 +11,7 @@ name: Build & Push Docker Image
 
 on:
   push:
-    branches: [main]
+    branches: ["**", "!renovate/**"]
     tags: ["v[0-9]+.[0-9]+.[0-9]+"]
     paths-ignore:
       - "**.md"
@@ -69,6 +69,10 @@ jobs:
     if: ${{ !failure() && !cancelled() }}
     name: Build & Push
     runs-on: ubuntu-latest
+    env:
+      # Only main, release tags and rebuilds of the newest release publish.
+      # Other branches build and smoke-test.
+      PUBLISH: ${{ github.ref_type == 'tag' || github.ref_name == 'main' || needs.release.outputs.tag != '' }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -82,7 +86,7 @@ jobs:
         uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4
 
       - name: Log in to GHCR
-        if: github.event_name != 'pull_request'
+        if: env.PUBLISH == 'true'
         uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4
         with:
           registry: ghcr.io
@@ -92,7 +96,7 @@ jobs:
       # Docker Hub mirror, active only once DOCKERHUB_USERNAME (variable) and
       # DOCKERHUB_TOKEN (secret) are both set; otherwise skipped.
       - name: Log in to Docker Hub
-        if: ${{ vars.DOCKERHUB_USERNAME != '' && github.event_name != 'pull_request' }}
+        if: ${{ vars.DOCKERHUB_USERNAME != '' && env.PUBLISH == 'true' }}
         uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
@@ -223,7 +227,7 @@ jobs:
           category: trivy
 
       - name: Build & push
-        if: github.event_name != 'pull_request'
+        if: env.PUBLISH == 'true'
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
         with:
           context: .
@@ -243,7 +247,7 @@ jobs:
       # legacy login endpoint refuses it with 401 once 2FA is on.
       - name: Docker Hub description sync ready?
         id: dhdesc
-        if: ${{ vars.DOCKERHUB_USERNAME != '' && github.event_name != 'pull_request' }}
+        if: ${{ vars.DOCKERHUB_USERNAME != '' && env.PUBLISH == 'true' }}
         env:
           PW: ${{ secrets.DOCKERHUB_TOKEN }}
         run: |
