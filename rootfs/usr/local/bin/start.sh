@@ -11,6 +11,10 @@ log() { printf '%s  %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$1"; }
 
 mkdir -p /config
 
+# nginx keeps its pid file in /run/nginx, which the Alpine package creates at
+# build time. Proxmox and other LXC hosts mount an empty tmpfs over /run.
+mkdir -p /run/nginx
+
 # Live collaboration needs a secure context (crypto.subtle), so HTTPS is
 # required. A self-signed certificate is generated once and kept in /config, so
 # it survives a container rebuild and a browser only has to be told once.

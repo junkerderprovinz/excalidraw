@@ -3,6 +3,12 @@
 All notable changes to this image are documented here. The full text of each
 release is in `.github/release-notes/`.
 
+## Unreleased
+
+### 🐛 Fixed
+
+- Excalidraw starts on Proxmox VE, which runs the image as an LXC with an empty `/run`. nginx stopped there with `open() "/run/nginx/nginx.pid" failed`, and the container stopped with it.
+
 ## 1.0.2 - 2026-11-05
 
 The room server moves to Express 5 and dotenv 18, the Node.js base image and
