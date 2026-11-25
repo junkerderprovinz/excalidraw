@@ -176,6 +176,9 @@ jobs:
       # Both published arches have to boot, because :latest is multi-arch and a
       # green amd64 alone would let a broken arm64 image through. arm64 runs under
       # QEMU here, so it gets a larger boot budget.
+      #
+      # /run starts as an empty tmpfs, the way Proxmox runs an OCI image as an
+      # LXC, so the image cannot rely on directories its packages put there.
       - name: "Smoke test: both arches must boot and serve /"
         run: |
           set -euo pipefail
@@ -183,7 +186,7 @@ jobs:
             local tag="$1" platform="$2" budget="$3"
             local name="exca-smoke-${platform##*/}"
             echo "::group::smoke ${platform}"
-            docker run -d --name "$name" --platform "$platform" -p 8080:80 "$tag"
+            docker run -d --name "$name" --platform "$platform" --tmpfs /run -p 8080:80 "$tag"
             for i in $(seq 1 "$budget"); do
               if curl -fsS -o /dev/null http://localhost:8080/; then
                 echo "✅ ${platform} served / after ${i}s"
