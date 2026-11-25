@@ -164,6 +164,6 @@ You do not have to take my word for it. The code is open and every release note 
 
 <br>
 
-Questions via the [support thread](https://forums.unraid.net/topic/198811-support-junkerderprovinz-unraid-apps/), bugs, ideas and feature requests via [GitHub issues](https://github.com/junkerderprovinz/excalidraw/issues).
+Questions, bugs, ideas and feature requests via [GitHub issues](https://github.com/junkerderprovinz/excalidraw/issues).
 
 <sub>Excalidraw is [MIT-licensed](https://github.com/excalidraw/excalidraw/blob/master/LICENSE) and belongs to the Excalidraw team. This image is not affiliated with or endorsed by Excalidraw.</sub>
