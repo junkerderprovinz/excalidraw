@@ -3,11 +3,13 @@
 All notable changes to this image are documented here. The full text of each
 release is in `.github/release-notes/`.
 
-## Unreleased
+## 1.0.3 - 2026-11-25
 
-### 🐛 Fixed
+Excalidraw starts on Proxmox VE, the image follows a newer Excalidraw with
+SQLite 1.63.0 and dotenv 18.0.10, and the published image gets the base
+system's updates every week.
 
-- Excalidraw starts on Proxmox VE, which runs the image as an LXC with an empty `/run`. nginx stopped there with `open() "/run/nginx/nginx.pid" failed`, and the container stopped with it.
+See [.github/release-notes/v1.0.3.md](.github/release-notes/v1.0.3.md).
 
 ## 1.0.2 - 2026-11-05
 
